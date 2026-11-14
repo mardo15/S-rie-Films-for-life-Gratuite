@@ -11,6 +11,7 @@
 <link href="https://cdn.jsdelivr.net/fontsource/fonts/plus-jakarta-sans@latest/latin-700-normal.css" rel="stylesheet">
 <link href="https://cdn.jsdelivr.net/fontsource/fonts/playfair-display@latest/latin-700-normal.css" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" crossorigin="anonymous">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
 :root{--bg:#0a0a0a;--bg-2:#141414;--bg-3:#1a1a1a;--red:#E50914;--red-dark:#B20710;--gold:#C9A24B;--text:#fff;--text-2:#b3b3b3;--muted:#666;--shadow:0 10px 30px rgba(0,0,0,.5);--radius:12px;--radius-lg:16px}
 *{margin:0;padding:0;box-sizing:border-box}
@@ -168,13 +169,11 @@ section{padding:60px 0;position:relative}
 .data-table th{background:var(--bg-3);padding:12px;text-align:left;font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--text-2)}
 .data-table td{padding:12px;border-top:1px solid rgba(255,255,255,.05);font-size:13px;vertical-align:middle}
 .data-table tr:hover{background:var(--bg-3)}
-.data-table .code-cell{font-family:'Courier New',monospace;font-weight:700;color:var(--gold);background:rgba(201,162,75,.1);padding:4px 10px;border-radius:6px;display:inline-block}
 .table-actions{display:flex;gap:6px;flex-wrap:wrap}
 .icon-btn{width:34px;height:34px;border-radius:8px;background:var(--bg-3);display:inline-grid;place-items:center;color:var(--text-2);cursor:pointer;transition:all .2s;font-size:13px}
 .icon-btn:hover{background:var(--red);color:#fff}
 .icon-btn.danger:hover{background:#EF4444}
 .icon-btn.success:hover{background:#00C853}
-.icon-btn.wa:hover{background:var(--gold);color:#000}
 .empty-state{text-align:center;padding:40px 20px;color:var(--text-2)}
 .empty-state i{font-size:48px;margin-bottom:16px;opacity:.3;display:block}
 .empty-state p{font-size:14px}
@@ -220,6 +219,9 @@ section{padding:60px 0;position:relative}
 .footer-bottom{border-top:1px solid rgba(255,255,255,.05);padding-top:20px;text-align:center;font-size:12px;color:var(--text-2)}
 
 .float-wa{position:fixed;bottom:20px;right:20px;z-index:90;width:56px;height:56px;border-radius:50%;background:var(--red);color:#fff;display:grid;place-items:center;font-size:24px;box-shadow:0 8px 24px rgba(229,9,20,.4)}
+
+.loading{display:inline-block;width:20px;height:20px;border:3px solid rgba(255,255,255,.3);border-radius:50%;border-top-color:var(--red);animation:spin 1s ease-in-out infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
 </style>
 </head>
 <body>
@@ -428,109 +430,106 @@ section{padding:60px 0;position:relative}
 (function(){
 'use strict';
 
-function setDB(key, val) {
-  try { localStorage.setItem('sfl_' + key, JSON.stringify(val)); return true; }
-  catch (e) { console.error('setDB error:', e); return false; }
+// ============================================
+// SUPABASE CONFIGURATION
+// ============================================
+const SUPABASE_URL = 'https://klt76hNZsBHipEQktKwmaA.supabase.co';
+const SUPABASE_KEY = 'sb_publishable_klt76hNZsBHipEQktKwmaA_JGAMuU3a';
+const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+// ============================================
+// DATABASE FUNCTIONS
+// ============================================
+async function fetchMovies() {
+  try {
+    const { data, error } = await supabase.from('movies').select('*').order('added_at', { ascending: false });
+    if (error) throw error;
+    return data || [];
+  } catch (e) {
+    console.error('fetchMovies error:', e);
+    return [];
+  }
 }
 
-function getDB(key) {
+async function fetchUsers() {
   try {
-    var val = localStorage.getItem('sfl_' + key);
-    return val ? JSON.parse(val) : null;
-  } catch (e) { console.error('getDB error:', e); return null; }
+    const { data, error } = await supabase.from('users').select('*');
+    if (error) throw error;
+    return data || [];
+  } catch (e) {
+    console.error('fetchUsers error:', e);
+    return [];
+  }
+}
+
+async function insertMovie(movie) {
+  try {
+    const { data, error } = await supabase.from('movies').insert([movie]).select();
+    if (error) throw error;
+    return data[0];
+  } catch (e) {
+    console.error('insertMovie error:', e);
+    return null;
+  }
+}
+
+async function updateMovie(id, updates) {
+  try {
+    const { data, error } = await supabase.from('movies').update(updates).eq('id', id).select();
+    if (error) throw error;
+    return data[0];
+  } catch (e) {
+    console.error('updateMovie error:', e);
+    return null;
+  }
+}
+
+async function deleteMovie(id) {
+  try {
+    const { error } = await supabase.from('movies').delete().eq('id', id);
+    if (error) throw error;
+    return true;
+  } catch (e) {
+    console.error('deleteMovie error:', e);
+    return false;
+  }
+}
+
+async function insertUser(user) {
+  try {
+    const { data, error } = await supabase.from('users').insert([user]).select();
+    if (error) throw error;
+    return data[0];
+  } catch (e) {
+    console.error('insertUser error:', e);
+    return null;
+  }
+}
+
+async function updateUser(id, updates) {
+  try {
+    const { data, error } = await supabase.from('users').update(updates).eq('id', id).select();
+    if (error) throw error;
+    return data[0];
+  } catch (e) {
+    console.error('updateUser error:', e);
+    return null;
+  }
+}
+
+async function deleteUser(id) {
+  try {
+    const { error } = await supabase.from('users').delete().eq('id', id);
+    if (error) throw error;
+    return true;
+  } catch (e) {
+    console.error('deleteUser error:', e);
+    return false;
+  }
 }
 
 function fmtDate(d){if(!d)return'—';try{var dt=new Date(d);return dt.toLocaleDateString('fr-FR')+' '+dt.toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'})}catch(e){return d}}
 function fmtDateShort(d){if(!d)return'—';try{return new Date(d).toLocaleDateString('fr-FR')}catch(e){return d}}
-
-function initDB() {
-  var existingUsers = getDB('users');
-  if (!existingUsers || !Array.isArray(existingUsers)) {
-    var users = [
-      {
-        id: "USR_ADMIN",
-        email: "admin@sfl.com",
-        password: "admin1234",
-        registeredAt: "2026-01-01",
-        status: "active",
-        lastLogin: null,
-        isAdmin: true
-      }
-    ];
-    setDB('users', users);
-  }
-  
-  var existingMovies = getDB('movies');
-  if (!existingMovies || !Array.isArray(existingMovies)) {
-    var movies = [
-      {
-        id: "MOV_001",
-        title: "Inception",
-        type: "movie",
-        year: 2010,
-        duration: "2h 28min",
-        genre: "Sci-Fi, Action",
-        desc: "Un voleur qui s'infiltre dans les rêves des autres pour voler leurs secrets se voit confier la tâche inverse : implanter une idée dans l'esprit d'un PDG.",
-        poster: "https://images.unsplash.com/photo-1440404653325-ab127d49abc1?w=400&q=80",
-        video: "https://www.youtube.com/embed/YoHD9XEInc0",
-        download: "",
-        isNew: true,
-        isFeatured: true,
-        views: 0,
-        addedAt: "2026-01-15"
-      },
-      {
-        id: "MOV_002",
-        title: "The Dark Knight",
-        type: "movie",
-        year: 2008,
-        duration: "2h 32min",
-        genre: "Action, Crime",
-        desc: "Batman doit accepter l'une des plus grandes考验 psychologiques et physiques de sa capacité à combattre l'injustice face au Joker.",
-        poster: "https://images.unsplash.com/photo-1478720568477-152d9b164e26?w=400&q=80",
-        video: "https://www.youtube.com/embed/EXeTwQWrcwY",
-        download: "",
-        isNew: false,
-        isFeatured: true,
-        views: 0,
-        addedAt: "2026-01-10"
-      },
-      {
-        id: "MOV_003",
-        title: "Breaking Bad",
-        type: "series",
-        year: 2008,
-        duration: "5 saisons",
-        genre: "Drame, Crime",
-        desc: "Un professeur de chimie diagnostiqué avec un cancer du poumon se tourne vers la fabrication de méthamphétamine pour assurer l'avenir financier de sa famille.",
-        poster: "https://images.unsplash.com/photo-1574375927938-d5a98e8ffe85?w=400&q=80",
-        video: "https://www.youtube.com/embed/HhesaQXLuRY",
-        download: "",
-        isNew: true,
-        isFeatured: true,
-        views: 0,
-        addedAt: "2026-01-20"
-      },
-      {
-        id: "MOV_004",
-        title: "Stranger Things",
-        type: "series",
-        year: 2016,
-        duration: "4 saisons",
-        genre: "Sci-Fi, Horreur",
-        desc: "Quand un jeune garçon disparaît, une petite ville découvre un mystère impliquant des expériences secrètes, des forces surnaturelles terrifiantes et une étrange petite fille.",
-        poster: "https://images.unsplash.com/photo-1509347528160-9a9e33742cdb?w=400&q=80",
-        video: "https://www.youtube.com/embed/b9EkMc79ZSU",
-        download: "",
-        isNew: true,
-        isFeatured: false,
-        views: 0,
-        addedAt: "2026-01-18"
-      }
-    ];
-    setDB('movies', movies);
-  }
-}
 
 var SESSION_KEY = 'sfl_session';
 
@@ -578,15 +577,15 @@ function toggleMobile() {
   document.getElementById('mobileMenu').classList.toggle('open');
 }
 
-function renderHome() {
-  var movies = getDB('movies') || [];
-  var users = getDB('users') || [];
+async function renderHome() {
+  var movies = await fetchMovies();
+  var users = await fetchUsers();
   
   document.getElementById('statMovies').textContent = movies.filter(m => m.type === 'movie').length;
   document.getElementById('statSeries').textContent = movies.filter(m => m.type === 'series').length;
-  document.getElementById('statUsers').textContent = users.filter(u => !u.isAdmin).length;
+  document.getElementById('statUsers').textContent = users.filter(u => !u.is_admin).length;
   
-  var featured = movies.filter(m => m.isFeatured);
+  var featured = movies.filter(m => m.is_featured);
   var fg = document.getElementById('featuredGrid');
   if (featured.length > 0) {
     var main = featured[0];
@@ -606,7 +605,7 @@ function renderHome() {
     fg.innerHTML = h;
   }
   
-  var newMovies = movies.filter(m => m.isNew);
+  var newMovies = movies.filter(m => m.is_new);
   document.getElementById('newGrid').innerHTML = renderMoviesGrid(newMovies);
   document.getElementById('moviesGrid').innerHTML = renderMoviesGrid(movies.filter(m => m.type === 'movie'));
   document.getElementById('seriesGrid').innerHTML = renderMoviesGrid(movies.filter(m => m.type === 'series'));
@@ -618,7 +617,7 @@ function renderMoviesGrid(movies) {
   for (var i = 0; i < movies.length; i++) {
     var m = movies[i];
     var badge = '';
-    if (m.isNew) badge = '<div class="movie-badge new">NOUVEAU</div>';
+    if (m.is_new) badge = '<div class="movie-badge new">NOUVEAU</div>';
     else if (m.type === 'series') badge = '<div class="movie-badge series">SÉRIE</div>';
     h += '<div class="movie-card" onclick="openPlayer(\'' + m.id + '\')">';
     h += '<div class="movie-poster"><img src="' + m.poster + '" alt="' + m.title + '" loading="lazy">' + badge;
@@ -630,10 +629,10 @@ function renderMoviesGrid(movies) {
   return h;
 }
 
-function renderDashboard() {
+async function renderDashboard() {
   var session = getSession();
   if (!session) { go('home'); return; }
-  var users = getDB('users') || [];
+  var users = await fetchUsers();
   var u = null;
   for (var i = 0; i < users.length; i++) {
     if (users[i].id === session.userId) { u = users[i]; break; }
@@ -649,10 +648,10 @@ function renderDashboard() {
   
   document.getElementById('dashName').textContent = u.email.split('@')[0].toUpperCase();
   document.getElementById('dashEmail').textContent = u.email;
-  document.getElementById('dashSince').textContent = fmtDateShort(u.registeredAt);
-  document.getElementById('dashLastLogin').textContent = fmtDate(u.lastLogin);
+  document.getElementById('dashSince').textContent = fmtDateShort(u.registered_at);
+  document.getElementById('dashLastLogin').textContent = fmtDate(u.last_login);
   
-  var movies = getDB('movies') || [];
+  var movies = await fetchMovies();
   document.getElementById('dashStats').innerHTML = '<div class="dash-stat"><i class="fas fa-film"></i><strong>' + movies.length + '</strong><span>Films & Séries</span></div><div class="dash-stat"><i class="fas fa-play-circle"></i><strong>' + movies.filter(m => m.type === 'movie').length + '</strong><span>Films</span></div><div class="dash-stat"><i class="fas fa-tv"></i><strong>' + movies.filter(m => m.type === 'series').length + '</strong><span>Séries</span></div><div class="dash-stat"><i class="fas fa-star"></i><strong>HD</strong><span>Qualité</span></div>';
   
   document.getElementById('dashMovies').innerHTML = renderMoviesGrid(movies);
@@ -660,14 +659,14 @@ function renderDashboard() {
 
 var currentMovie = null;
 
-function openPlayer(movieId) {
+async function openPlayer(movieId) {
   var session = getSession();
   if (!session) {
     openModal('login');
     toast('Connexion requise', 'Connectez-vous pour regarder.');
     return;
   }
-  var users = getDB('users') || [];
+  var users = await fetchUsers();
   var u = null;
   for (var i = 0; i < users.length; i++) {
     if (users[i].id === session.userId) { u = users[i]; break; }
@@ -677,18 +676,14 @@ function openPlayer(movieId) {
     return;
   }
   
-  var movies = getDB('movies') || [];
+  var movies = await fetchMovies();
   var m = null;
   for (var i = 0; i < movies.length; i++) {
     if (movies[i].id === movieId) { m = movies[i]; break; }
   }
   if (!m) return;
   
-  m.views = (m.views || 0) + 1;
-  for (var i = 0; i < movies.length; i++) {
-    if (movies[i].id === movieId) { movies[i] = m; break; }
-  }
-  setDB('movies', movies);
+  await updateMovie(m.id, { views: (m.views || 0) + 1 });
   
   currentMovie = m;
   go('player');
@@ -731,19 +726,19 @@ function adminTab(n, b) {
   if (n === 'users') renderUsersTable();
 }
 
-function renderAdmin() {
+async function renderAdmin() {
   var session = getSession();
   if (!session) { go('home'); return; }
-  var users = getDB('users') || [];
+  var users = await fetchUsers();
   var admin = null;
   for (var i = 0; i < users.length; i++) {
-    if (users[i].id === session.userId && users[i].isAdmin) { admin = users[i]; break; }
+    if (users[i].id === session.userId && users[i].is_admin) { admin = users[i]; break; }
   }
   if (!admin) { go('home'); return; }
   
-  var movies = getDB('movies') || [];
-  var activeUsers = users.filter(u => !u.isAdmin && u.status === 'active').length;
-  var disabledUsers = users.filter(u => !u.isAdmin && u.status === 'disabled').length;
+  var movies = await fetchMovies();
+  var activeUsers = users.filter(u => !u.is_admin && u.status === 'active').length;
+  var disabledUsers = users.filter(u => !u.is_admin && u.status === 'disabled').length;
   var totalViews = movies.reduce((sum, m) => sum + (m.views || 0), 0);
   
   document.getElementById('adminStats').innerHTML = '<div class="dash-stat"><i class="fas fa-users"></i><strong>' + (users.length - 1) + '</strong><span>Total membres</span></div><div class="dash-stat"><i class="fas fa-user-check" style="color:#00C853"></i><strong>' + activeUsers + '</strong><span>Actifs</span></div><div class="dash-stat"><i class="fas fa-user-clock" style="color:#FF9800"></i><strong>' + disabledUsers + '</strong><span>En attente</span></div><div class="dash-stat"><i class="fas fa-eye"></i><strong>' + totalViews + '</strong><span>Vues totales</span></div>';
@@ -752,8 +747,8 @@ function renderAdmin() {
   renderUsersTable();
 }
 
-function renderMoviesTable() {
-  var movies = getDB('movies') || [];
+async function renderMoviesTable() {
+  var movies = await fetchMovies();
   var tbody = document.getElementById('moviesTableBody');
   if (!tbody) return;
   var h = '';
@@ -766,7 +761,7 @@ function renderMoviesTable() {
       h += '<td><strong>' + m.title + '</strong><br><span style="font-size:11px;color:var(--text-2)">' + m.genre + '</span></td>';
       h += '<td><span class="badge ' + (m.type === 'movie' ? 'badge-active' : 'badge-disabled') + '">' + (m.type === 'movie' ? 'Film' : 'Série') + '</span></td>';
       h += '<td>' + m.year + '</td>';
-      h += '<td style="font-size:11px">' + fmtDateShort(m.addedAt) + '</td>';
+      h += '<td style="font-size:11px">' + fmtDateShort(m.added_at) + '</td>';
       h += '<td>' + m.views + '</td>';
       h += '<td><div class="table-actions">';
       h += '<button class="icon-btn" onclick="editMovie(\'' + m.id + '\')" title="Modifier"><i class="fas fa-edit"></i></button>';
@@ -778,20 +773,20 @@ function renderMoviesTable() {
   tbody.innerHTML = h;
 }
 
-function renderUsersTable() {
-  var users = getDB('users') || [];
+async function renderUsersTable() {
+  var users = await fetchUsers();
   var tbody = document.getElementById('usersTableBody');
   if (!tbody) return;
   var h = '';
   var hasUsers = false;
   for (var i = 0; i < users.length; i++) {
-    if (users[i].isAdmin) continue;
+    if (users[i].is_admin) continue;
     hasUsers = true;
     var u = users[i];
     h += '<tr>';
     h += '<td><strong>' + u.email + '</strong></td>';
-    h += '<td style="font-size:11px">' + fmtDateShort(u.registeredAt) + '</td>';
-    h += '<td style="font-size:11px">' + fmtDate(u.lastLogin) + '</td>';
+    h += '<td style="font-size:11px">' + fmtDateShort(u.registered_at) + '</td>';
+    h += '<td style="font-size:11px">' + fmtDate(u.last_login) + '</td>';
     h += '<td><span class="badge ' + (u.status === 'active' ? 'badge-active' : 'badge-disabled') + '">' + (u.status === 'active' ? 'Actif' : 'Désactivé') + '</span></td>';
     h += '<td><div class="table-actions">';
     if (u.status === 'active') {
@@ -809,21 +804,7 @@ function renderUsersTable() {
   tbody.innerHTML = h;
 }
 
-function generateMovieId() {
-  var movies = getDB('movies') || [];
-  var maxNum = 0;
-  for (var i = 0; i < movies.length; i++) {
-    if (movies[i].id && movies[i].id.indexOf('MOV_') === 0) {
-      var num = parseInt(movies[i].id.replace('MOV_', ''), 10);
-      if (!isNaN(num) && num > maxNum) maxNum = num;
-    }
-  }
-  var nextNum = maxNum + 1;
-  var pad = nextNum < 10 ? '00' : nextNum < 100 ? '0' : '';
-  return 'MOV_' + pad + nextNum;
-}
-
-function addMovie(e) {
+async function addMovie(e) {
   if (e) e.preventDefault();
   var aB = document.getElementById('addAlert');
   
@@ -844,9 +825,7 @@ function addMovie(e) {
     return;
   }
   
-  var movies = getDB('movies') || [];
   var newMovie = {
-    id: generateMovieId(),
     title: title,
     type: type,
     year: year,
@@ -856,38 +835,41 @@ function addMovie(e) {
     poster: poster,
     video: video,
     download: download,
-    isNew: isNew,
-    isFeatured: isFeatured,
+    is_new: isNew,
+    is_featured: isFeatured,
     views: 0,
-    addedAt: new Date().toISOString().split('T')[0]
+    added_at: new Date().toISOString()
   };
   
-  movies.push(newMovie);
-  setDB('movies', movies);
+  var result = await insertMovie(newMovie);
   
-  if (aB) aB.innerHTML = '<div class="alert alert-ok"><i class="fas fa-check-circle"></i> Film/Série ajouté avec succès ! ID: ' + newMovie.id + '</div>';
-  
-  document.getElementById('addTitle').value = '';
-  document.getElementById('addType').value = 'movie';
-  document.getElementById('addYear').value = '';
-  document.getElementById('addDuration').value = '';
-  document.getElementById('addGenre').value = '';
-  document.getElementById('addDesc').value = '';
-  document.getElementById('addPoster').value = '';
-  document.getElementById('addVideo').value = '';
-  document.getElementById('addDownload').value = '';
-  document.getElementById('addNew').checked = true;
-  document.getElementById('addFeatured').checked = false;
-  
-  toast('Film ajouté !', title + ' est maintenant disponible.');
-  
-  setTimeout(function() {
-    adminTab('movies', document.querySelector('.admin-tab'));
-  }, 1500);
+  if (result) {
+    if (aB) aB.innerHTML = '<div class="alert alert-ok"><i class="fas fa-check-circle"></i> Film/Série ajouté avec succès !</div>';
+    
+    document.getElementById('addTitle').value = '';
+    document.getElementById('addType').value = 'movie';
+    document.getElementById('addYear').value = '';
+    document.getElementById('addDuration').value = '';
+    document.getElementById('addGenre').value = '';
+    document.getElementById('addDesc').value = '';
+    document.getElementById('addPoster').value = '';
+    document.getElementById('addVideo').value = '';
+    document.getElementById('addDownload').value = '';
+    document.getElementById('addNew').checked = true;
+    document.getElementById('addFeatured').checked = false;
+    
+    toast('Film ajouté !', title + ' est maintenant disponible.');
+    
+    setTimeout(function() {
+      adminTab('movies', document.querySelector('.admin-tab'));
+    }, 1500);
+  } else {
+    if (aB) aB.innerHTML = '<div class="alert alert-err"><i class="fas fa-exclamation-circle"></i> Erreur lors de l\'ajout.</div>';
+  }
 }
 
-function editMovie(id) {
-  var movies = getDB('movies') || [];
+async function editMovie(id) {
+  var movies = await fetchMovies();
   var m = null;
   for (var i = 0; i < movies.length; i++) {
     if (movies[i].id === id) { m = movies[i]; break; }
@@ -908,8 +890,8 @@ function editMovie(id) {
   h += '<div class="form-group"><label>URL Affiche *</label><input type="url" id="editPoster" value="' + m.poster + '" required></div>';
   h += '<div class="form-group"><label>Lien vidéo *</label><input type="url" id="editVideo" value="' + m.video + '" required></div>';
   h += '<div class="form-group"><label>Lien téléchargement</label><input type="url" id="editDownload" value="' + (m.download || '') + '"></div>';
-  h += '<div class="form-row"><div class="form-group"><label><input type="checkbox" id="editNew"' + (m.isNew ? ' checked' : '') + ' style="margin-right:6px"> Nouveau</label></div>';
-  h += '<div class="form-group"><label><input type="checkbox" id="editFeatured"' + (m.isFeatured ? ' checked' : '') + ' style="margin-right:6px"> À la une</label></div></div>';
+  h += '<div class="form-row"><div class="form-group"><label><input type="checkbox" id="editNew"' + (m.is_new ? ' checked' : '') + ' style="margin-right:6px"> Nouveau</label></div>';
+  h += '<div class="form-group"><label><input type="checkbox" id="editFeatured"' + (m.is_featured ? ' checked' : '') + ' style="margin-right:6px"> À la une</label></div></div>';
   h += '<button type="submit" class="btn btn-primary btn-lg"><i class="fas fa-save"></i> ENREGISTRER</button>';
   h += '</form>';
   
@@ -919,80 +901,77 @@ function editMovie(id) {
   ov.classList.add('open');
 }
 
-function saveMovie(e, id) {
+async function saveMovie(e, id) {
   if (e) e.preventDefault();
   var aB = document.getElementById('editAlert');
   
-  var movies = getDB('movies') || [];
-  for (var i = 0; i < movies.length; i++) {
-    if (movies[i].id === id) {
-      movies[i].title = document.getElementById('editTitle').value.trim();
-      movies[i].type = document.getElementById('editType').value;
-      movies[i].year = parseInt(document.getElementById('editYear').value);
-      movies[i].duration = document.getElementById('editDuration').value.trim();
-      movies[i].genre = document.getElementById('editGenre').value.trim();
-      movies[i].desc = document.getElementById('editDesc').value.trim();
-      movies[i].poster = document.getElementById('editPoster').value.trim();
-      movies[i].video = document.getElementById('editVideo').value.trim();
-      movies[i].download = document.getElementById('editDownload').value.trim();
-      movies[i].isNew = document.getElementById('editNew').checked;
-      movies[i].isFeatured = document.getElementById('editFeatured').checked;
-      break;
-    }
+  var updates = {
+    title: document.getElementById('editTitle').value.trim(),
+    type: document.getElementById('editType').value,
+    year: parseInt(document.getElementById('editYear').value),
+    duration: document.getElementById('editDuration').value.trim(),
+    genre: document.getElementById('editGenre').value.trim(),
+    desc: document.getElementById('editDesc').value.trim(),
+    poster: document.getElementById('editPoster').value.trim(),
+    video: document.getElementById('editVideo').value.trim(),
+    download: document.getElementById('editDownload').value.trim(),
+    is_new: document.getElementById('editNew').checked,
+    is_featured: document.getElementById('editFeatured').checked
+  };
+  
+  var result = await updateMovie(id, updates);
+  
+  if (result) {
+    if (aB) aB.innerHTML = '<div class="alert alert-ok"><i class="fas fa-check-circle"></i> Modifications enregistrées.</div>';
+    toast('Film modifié', 'Les changements ont été sauvegardés.');
+    setTimeout(function() {
+      closeModal();
+      renderMoviesTable();
+    }, 1500);
+  } else {
+    if (aB) aB.innerHTML = '<div class="alert alert-err"><i class="fas fa-exclamation-circle"></i> Erreur lors de la modification.</div>';
   }
-  setDB('movies', movies);
-  if (aB) aB.innerHTML = '<div class="alert alert-ok"><i class="fas fa-check-circle"></i> Modifications enregistrées.</div>';
-  toast('Film modifié', 'Les changements ont été sauvegardés.');
-  setTimeout(function() {
-    closeModal();
-    renderMoviesTable();
-  }, 1500);
 }
 
-function deleteMovie(id) {
+async function deleteMovie(id) {
   if (!confirm('Supprimer définitivement ce film/série ?')) return;
-  var movies = getDB('movies') || [];
-  var filtered = [];
-  for (var i = 0; i < movies.length; i++) {
-    if (movies[i].id !== id) filtered.push(movies[i]);
+  var result = await deleteMovie(id);
+  if (result) {
+    toast('Film supprimé', 'Le film a été retiré du catalogue.');
+    renderMoviesTable();
+    renderAdmin();
+  } else {
+    toast('Erreur', 'Impossible de supprimer le film.');
   }
-  setDB('movies', filtered);
-  toast('Film supprimé', 'Le film a été retiré du catalogue.');
-  renderMoviesTable();
-  renderAdmin();
 }
 
-function toggleUserStatus(id, newStatus) {
+async function toggleUserStatus(id, newStatus) {
   var label = newStatus === 'active' ? 'approuver' : 'désactiver';
   if (!confirm('Voulez-vous ' + label + ' ce membre ?')) return;
   
-  var users = getDB('users') || [];
-  for (var i = 0; i < users.length; i++) {
-    if (users[i].id === id) {
-      users[i].status = newStatus;
-      break;
-    }
+  var result = await updateUser(id, { status: newStatus });
+  if (result) {
+    toast('Statut modifié', 'Le membre a été ' + label + '.');
+    renderUsersTable();
+    renderAdmin();
+  } else {
+    toast('Erreur', 'Impossible de modifier le statut.');
   }
-  setDB('users', users);
-  toast('Statut modifié', 'Le membre a été ' + label + '.');
-  renderUsersTable();
-  renderAdmin();
 }
 
-function deleteUser(id) {
+async function deleteUser(id) {
   if (!confirm('Supprimer définitivement ce membre ?')) return;
-  var users = getDB('users') || [];
-  var filtered = [];
-  for (var i = 0; i < users.length; i++) {
-    if (users[i].id !== id) filtered.push(users[i]);
+  var result = await deleteUser(id);
+  if (result) {
+    toast('Membre supprimé', 'Le membre a été retiré.');
+    renderUsersTable();
+    renderAdmin();
+  } else {
+    toast('Erreur', 'Impossible de supprimer le membre.');
   }
-  setDB('users', filtered);
-  toast('Membre supprimé', 'Le membre a été retiré.');
-  renderUsersTable();
-  renderAdmin();
 }
 
-function doLogin(e) {
+async function doLogin(e) {
   if (e) e.preventDefault();
   var email = document.getElementById('loginEmail').value.trim().toLowerCase();
   var password = document.getElementById('loginPassword').value;
@@ -1003,7 +982,7 @@ function doLogin(e) {
     return;
   }
   
-  var users = getDB('users') || [];
+  var users = await fetchUsers();
   var u = null;
   for (var i = 0; i < users.length; i++) {
     if (users[i].email && users[i].email.toLowerCase() === email && users[i].password === password) {
@@ -1022,22 +1001,18 @@ function doLogin(e) {
     return;
   }
   
-  u.lastLogin = new Date().toISOString();
-  for (var i = 0; i < users.length; i++) {
-    if (users[i].id === u.id) { users[i] = u; break; }
-  }
-  setDB('users', users);
+  await updateUser(u.id, { last_login: new Date().toISOString() });
   setSession({userId: u.id});
   
   closeModal();
   toast('Bienvenue !', 'Connexion réussie');
   setTimeout(function() {
-    if (u.isAdmin) go('admin');
+    if (u.is_admin) go('admin');
     else go('dashboard');
   }, 500);
 }
 
-function doRegister(e) {
+async function doRegister(e) {
   if (e) e.preventDefault();
   var email = document.getElementById('regEmail').value.trim().toLowerCase();
   var password = document.getElementById('regPassword').value;
@@ -1053,7 +1028,7 @@ function doRegister(e) {
     return;
   }
   
-  var users = getDB('users') || [];
+  var users = await fetchUsers();
   for (var i = 0; i < users.length; i++) {
     if (users[i].email && users[i].email.toLowerCase() === email) {
       if (aB) aB.innerHTML = '<div class="alert alert-err"><i class="fas fa-exclamation-circle"></i> Cet email est déjà utilisé.</div>';
@@ -1062,21 +1037,23 @@ function doRegister(e) {
   }
   
   var newMember = {
-    id: "USR_" + Date.now(),
     email: email,
     password: password,
-    registeredAt: new Date().toISOString().split('T')[0],
+    registered_at: new Date().toISOString(),
     status: 'active',
-    lastLogin: null,
-    isAdmin: false
+    last_login: null,
+    is_admin: false
   };
   
-  users.push(newMember);
-  setDB('users', users);
-  setSession({userId: newMember.id});
+  var result = await insertUser(newMember);
   
-  if (aB) aB.innerHTML = '<div class="alert alert-ok"><i class="fas fa-check-circle"></i> Inscription réussie ! Bienvenue.</div>';
-  setTimeout(function() { closeModal(); toast('Bienvenue !', 'Inscription réussie.'); go('dashboard'); }, 1500);
+  if (result) {
+    setSession({userId: result.id});
+    if (aB) aB.innerHTML = '<div class="alert alert-ok"><i class="fas fa-check-circle"></i> Inscription réussie ! Bienvenue.</div>';
+    setTimeout(function() { closeModal(); toast('Bienvenue !', 'Inscription réussie.'); go('dashboard'); }, 1500);
+  } else {
+    if (aB) aB.innerHTML = '<div class="alert alert-err"><i class="fas fa-exclamation-circle"></i> Erreur lors de l\'inscription.</div>';
+  }
 }
 
 function logout() {
@@ -1144,23 +1121,21 @@ window.editMovie = editMovie;
 window.saveMovie = saveMovie;
 window.deleteMovie = deleteMovie;
 window.toggleUserStatus = toggleUserStatus;
-window.deleteUser = deleteUser;
 window.openPlayer = openPlayer;
 window.playVideo = playVideo;
 
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', async function() {
   try {
-    initDB();
-    renderHome();
+    await renderHome();
     var session = getSession();
     if (session) {
-      var users = getDB('users') || [];
+      var users = await fetchUsers();
       var u = null;
       for (var i = 0; i < users.length; i++) {
         if (users[i].id === session.userId) { u = users[i]; break; }
       }
       if (u) {
-        if (u.isAdmin) go('admin');
+        if (u.is_admin) go('admin');
         else go('dashboard');
       }
     }
