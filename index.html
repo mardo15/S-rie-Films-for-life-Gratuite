@@ -190,16 +190,46 @@ section{padding:60px 0;position:relative}
 .toast strong{display:block;font-size:13px}
 .toast span{font-size:12px;color:var(--text-2)}
 
-.player-page{padding:30px 0 60px;background:var(--bg);min-height:100vh}
-.player-grid{display:grid;grid-template-columns:2fr 1fr;gap:20px}
-@media(max-width:1000px){.player-grid{grid-template-columns:1fr}}
-.video-wrap{background:#000;border-radius:var(--radius-lg);overflow:hidden;position:relative;box-shadow:var(--shadow);aspect-ratio:16/9}
-.video-container{position:relative;width:100%;height:100%;background:#000}
-.video-container iframe{position:absolute;top:0;left:0;width:100%;height:100%;border:0}
-.video-placeholder{position:absolute;top:0;left:0;width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;color:#fff;cursor:pointer;background:linear-gradient(135deg,#0a0a0a 0%,#1a1a1a 100%);gap:14px}
-.video-placeholder .play-btn{width:80px;height:80px;border-radius:50%;background:var(--red);display:grid;place-items:center;font-size:28px;box-shadow:0 8px 24px rgba(229,9,20,.4);transition:transform .3s}
-.video-placeholder:hover .play-btn{transform:scale(1.1)}
-.video-placeholder p{color:var(--text-2);font-size:14px}
+/* ============================================
+   🎬 LECTEUR VIDÉO PLEIN ÉCRAN
+   ============================================ */
+.player-page{padding:0;background:#000;min-height:100vh;position:fixed;top:0;left:0;right:0;bottom:0;z-index:400;overflow:hidden}
+.player-page .player-container{width:100vw;height:100vh;position:relative;background:#000}
+.player-back-btn{position:absolute;top:20px;left:20px;z-index:10;background:rgba(0,0,0,.7);color:#fff;padding:10px 18px;border-radius:999px;font-size:13px;font-weight:600;cursor:pointer;backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,.1);transition:all .3s;display:flex;align-items:center;gap:8px}
+.player-back-btn:hover{background:var(--red);border-color:var(--red)}
+.video-wrap-full{width:100%;height:100%;position:relative;background:#000}
+.video-container-full{width:100%;height:100%;position:relative;background:#000}
+.video-container-full iframe{position:absolute;top:0;left:0;width:100%;height:100%;border:0;background:#000}
+.video-placeholder-full{position:absolute;top:0;left:0;width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;color:#fff;cursor:pointer;background:linear-gradient(135deg,#0a0a0a 0%,#1a1a1a 100%);gap:20px}
+.video-placeholder-full .play-btn-big{width:120px;height:120px;border-radius:50%;background:var(--red);display:grid;place-items:center;font-size:48px;box-shadow:0 12px 40px rgba(229,9,20,.6);transition:all .3s;animation:pulsePlay 2s infinite}
+.video-placeholder-full:hover .play-btn-big{transform:scale(1.15);box-shadow:0 16px 50px rgba(229,9,20,.8)}
+@keyframes pulsePlay{0%,100%{box-shadow:0 12px 40px rgba(229,9,20,.6)}50%{box-shadow:0 12px 60px rgba(229,9,20,.9)}}
+.video-placeholder-full p{color:var(--text-2);font-size:16px;font-weight:500}
+.video-placeholder-full .movie-title-overlay{position:absolute;bottom:40px;left:40px;right:40px;z-index:2}
+.video-placeholder-full .movie-title-overlay h2{font-size:32px;margin-bottom:8px;text-shadow:0 2px 10px rgba(0,0,0,.8)}
+.video-placeholder-full .movie-title-overlay p{font-size:14px;color:var(--text-2)}
+.video-controls-bar{position:absolute;bottom:0;left:0;right:0;z-index:5;background:linear-gradient(180deg,transparent 0%,rgba(0,0,0,.9) 100%);padding:20px 30px;display:flex;justify-content:space-between;align-items:center;gap:15px;opacity:0;transition:opacity .3s}
+.video-wrap-full:hover .video-controls-bar{opacity:1}
+.video-controls-bar .movie-info-bar{flex:1}
+.video-controls-bar .movie-info-bar h3{font-size:18px;margin-bottom:4px}
+.video-controls-bar .movie-info-bar p{font-size:12px;color:var(--text-2)}
+.video-controls-bar .controls-btns{display:flex;gap:10px}
+.ctrl-btn{width:44px;height:44px;border-radius:50%;background:rgba(255,255,255,.1);display:grid;place-items:center;color:#fff;cursor:pointer;transition:all .2s;border:1px solid rgba(255,255,255,.1)}
+.ctrl-btn:hover{background:var(--red);border-color:var(--red)}
+.ctrl-btn.active{background:var(--red)}
+.fullscreen-btn{position:absolute;top:20px;right:20px;z-index:10;width:44px;height:44px;border-radius:50%;background:rgba(0,0,0,.7);display:grid;place-items:center;color:#fff;cursor:pointer;backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,.1);transition:all .2s}
+.fullscreen-btn:hover{background:var(--red);border-color:var(--red)}
+
+@media(max-width:768px){
+  .video-placeholder-full .play-btn-big{width:90px;height:90px;font-size:36px}
+  .video-placeholder-full .movie-title-overlay{bottom:20px;left:20px;right:20px}
+  .video-placeholder-full .movie-title-overlay h2{font-size:22px}
+  .player-back-btn{top:10px;left:10px;padding:8px 14px;font-size:12px}
+  .fullscreen-btn{top:10px;right:10px;width:38px;height:38px}
+  .video-controls-bar{padding:15px 20px}
+  .video-controls-bar .movie-info-bar h3{font-size:14px}
+}
+
 .movie-details{background:var(--bg-2);border-radius:var(--radius-lg);padding:24px;border:1px solid rgba(255,255,255,.05)}
 .movie-details h2{font-size:22px;margin-bottom:10px}
 .movie-details .meta-row{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:14px}
@@ -223,22 +253,23 @@ section{padding:60px 0;position:relative}
 
 .config-banner{background:linear-gradient(135deg,#FF9800 0%,#F57C00 100%);color:#000;padding:12px 20px;text-align:center;font-size:13px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:10px}
 .config-banner:hover{background:linear-gradient(135deg,#F57C00 0%,#E65100 100%)}
-.config-banner i{font-size:16px}
-
 .db-status{display:inline-flex;align-items:center;gap:6px;padding:4px 10px;border-radius:999px;font-size:11px;font-weight:600}
 .db-status.appwrite{background:rgba(33,150,243,.15);color:#2196F3;border:1px solid rgba(33,150,243,.3)}
 .db-status.local{background:rgba(255,152,0,.15);color:#FF9800;border:1px solid rgba(255,152,0,.3)}
 .db-status::before{content:'';width:6px;height:6px;border-radius:50%;background:currentColor;animation:pulse 2s infinite}
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
 
-.config-form{background:var(--bg-3);border-radius:var(--radius);padding:20px;margin-bottom:20px;border:1px solid rgba(255,255,255,.05)}
-.config-form h4{font-size:14px;font-weight:700;margin-bottom:14px;color:var(--gold);display:flex;align-items:center;gap:8px}
-.config-form h4 i{color:var(--gold)}
-.config-note{font-size:12px;color:var(--text-2);margin-bottom:12px;padding:10px;background:rgba(33,150,243,.05);border-left:3px solid #2196F3;border-radius:6px}
-.config-note code{background:var(--bg);padding:2px 6px;border-radius:4px;font-family:'Courier New',monospace;font-size:11px;color:var(--gold)}
+/* Loading spinner */
+.video-loading{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);z-index:3;color:var(--red);font-size:48px;animation:spin 1s linear infinite}
+@keyframes spin{from{transform:translate(-50%,-50%) rotate(0deg)}to{transform:translate(-50%,-50%) rotate(360deg)}}
 </style>
 </head>
 <body>
+
+<div class="config-banner" id="configBanner" onclick="openConfigModal()" style="display:none">
+  <i class="fas fa-cog"></i>
+  <span>⚙️ Configurer Appwrite - Cliquez ici pour connecter votre base de données cloud</span>
+</div>
 
 <header class="header"><div class="header-inner">
   <a class="logo" onclick="go('home');return false;"><div class="logo-mark">S</div><div class="logo-text"><span>Série & Films</span><small>for Life</small></div></a>
@@ -334,31 +365,38 @@ section{padding:60px 0;position:relative}
   </div></section>
 </div>
 
+<!-- ============================================
+     🎬 PAGE LECTEUR PLEIN ÉCRAN
+     ============================================ -->
 <div class="page" id="page-player">
-  <section class="player-page"><div class="container">
-    <div style="margin-bottom:20px"><a onclick="go('dashboard');return false;" href="#" style="font-size:13px;color:var(--text-2)"><i class="fas fa-arrow-left"></i> Retour</a></div>
-    <div class="player-grid">
-      <div>
-        <div class="video-wrap">
-          <div class="video-container" id="videoContainer">
-            <div class="video-placeholder" onclick="playVideo()">
-              <div class="play-btn"><i class="fas fa-play"></i></div>
-              <p>Cliquez pour lancer la vidéo</p>
+  <section class="player-page">
+    <div class="player-container">
+      <button class="player-back-btn" onclick="closePlayer()"><i class="fas fa-arrow-left"></i> Retour</button>
+      <button class="fullscreen-btn" onclick="toggleFullscreen()" title="Plein écran"><i class="fas fa-expand" id="fullscreenIcon"></i></button>
+      <div class="video-wrap-full" id="videoWrapFull">
+        <div class="video-container-full" id="videoContainerFull">
+          <div class="video-placeholder-full" onclick="playVideo()">
+            <div class="play-btn-big"><i class="fas fa-play"></i></div>
+            <p>Cliquez pour lancer le film</p>
+            <div class="movie-title-overlay">
+              <h2 id="playerTitleBig">Titre du film</h2>
+              <p id="playerMetaBig">Année • Genre</p>
             </div>
           </div>
         </div>
-      </div>
-      <div class="movie-details">
-        <h2 id="playerTitle">Titre</h2>
-        <div class="meta-row" id="playerMeta"></div>
-        <p class="desc" id="playerDesc">Description</p>
-        <div class="actions">
-          <button class="btn btn-primary" onclick="playVideo()"><i class="fas fa-play"></i> LECTURE</button>
-          <a id="downloadBtn" href="#" target="_blank" class="btn btn-gold"><i class="fas fa-download"></i> TÉLÉCHARGER</a>
+        <div class="video-controls-bar" id="videoControlsBar" style="display:none">
+          <div class="movie-info-bar">
+            <h3 id="controlsTitle">Titre</h3>
+            <p id="controlsMeta">Genre • Année</p>
+          </div>
+          <div class="controls-btns">
+            <button class="ctrl-btn" onclick="toggleFullscreen()" title="Plein écran"><i class="fas fa-expand"></i></button>
+            <button class="ctrl-btn" onclick="closePlayer()" title="Fermer"><i class="fas fa-times"></i></button>
+          </div>
         </div>
       </div>
     </div>
-  </div></section>
+  </section>
 </div>
 
 <div class="page" id="page-admin">
@@ -404,7 +442,13 @@ section{padding:60px 0;position:relative}
           <div class="form-group"><label>Genre *</label><input type="text" id="addGenre" required placeholder="Ex: Action, Sci-Fi, Drame"></div>
           <div class="form-group"><label>Description *</label><textarea id="addDesc" required rows="3" placeholder="Description du film ou série..."></textarea></div>
           <div class="form-group"><label>URL de l'affiche (image) *</label><input type="url" id="addPoster" required placeholder="https://..."></div>
-          <div class="form-group"><label>Lien vidéo (YouTube, Google Drive, etc.) *</label><input type="url" id="addVideo" required placeholder="https://..."></div>
+          <div class="form-group">
+            <label>Lien vidéo * (YouTube, Google Drive, Mega, Pcloud)</label>
+            <input type="url" id="addVideo" required placeholder="Collez le lien complet de la vidéo">
+            <small style="color:var(--text-2);font-size:11px;margin-top:4px;display:block">
+              <i class="fas fa-info-circle"></i> Supporte: YouTube, Google Drive, Mega.nz, Pcloud, liens directs MP4
+            </small>
+          </div>
           <div class="form-group"><label>Lien de téléchargement (optionnel)</label><input type="url" id="addDownload" placeholder="https://..."></div>
           <div class="form-row">
             <div class="form-group"><label><input type="checkbox" id="addNew" checked style="margin-right:6px"> Nouveau</label></div>
@@ -429,87 +473,25 @@ section{padding:60px 0;position:relative}
     <div class="admin-panel" id="panel-config">
       <div class="admin-card">
         <h3><i class="fas fa-cog"></i> CONFIGURATION APPWRITE</h3>
-        <p style="color:var(--text-2);font-size:13px;margin-bottom:20px">Configurez Appwrite pour synchroniser les données sur tous les appareils et permettre la connexion multi-appareils.</p>
-        
-        <div class="config-form">
-          <h4><i class="fas fa-cloud"></i> Connexion Appwrite</h4>
-          <div class="config-note">
-            <strong>📋 Comment obtenir vos clés :</strong><br>
-            1. Créez un compte sur <code>cloud.appwrite.io</code><br>
-            2. Créez un nouveau projet<br>
-            3. Copiez le <code>Project ID</code> et l'<code>Endpoint</code><br>
-            4. Créez une base de données avec 2 collections : <code>users</code> et <code>movies</code><br>
-            5. Activez l'authentification Email/Password
+        <p style="color:var(--text-2);font-size:13px;margin-bottom:20px">Configurez Appwrite pour synchroniser les données sur tous les appareils.</p>
+        <div id="configAlert"></div>
+        <form onsubmit="saveAppwriteConfig(event)">
+          <div class="form-group"><label>Appwrite Endpoint *</label><input type="url" id="cfgEndpoint" placeholder="https://cloud.appwrite.io/v1" required></div>
+          <div class="form-group"><label>Project ID *</label><input type="text" id="cfgProjectId" placeholder="6xxxxxxxxxxxxxxxxxxxxxxx" required style="font-family:'Courier New',monospace"></div>
+          <div class="form-row">
+            <div class="form-group"><label>Database ID *</label><input type="text" id="cfgDatabaseId" placeholder="main_database" required style="font-family:'Courier New',monospace"></div>
+            <div class="form-group"><label>Users Collection ID *</label><input type="text" id="cfgUsersCollection" placeholder="users" required style="font-family:'Courier New',monospace"></div>
           </div>
-          <div id="configAlert"></div>
-          <form onsubmit="saveAppwriteConfig(event)">
-            <div class="form-group">
-              <label>Appwrite Endpoint *</label>
-              <input type="url" id="cfgEndpoint" placeholder="https://cloud.appwrite.io/v1" required>
-            </div>
-            <div class="form-group">
-              <label>Project ID *</label>
-              <input type="text" id="cfgProjectId" placeholder="6xxxxxxxxxxxxxxxxxxxxxxx" required style="font-family:'Courier New',monospace">
-            </div>
-            <div class="form-row">
-              <div class="form-group">
-                <label>Database ID *</label>
-                <input type="text" id="cfgDatabaseId" placeholder="main_database" required style="font-family:'Courier New',monospace">
-              </div>
-              <div class="form-group">
-                <label>Users Collection ID *</label>
-                <input type="text" id="cfgUsersCollection" placeholder="users" required style="font-family:'Courier New',monospace">
-              </div>
-            </div>
-            <div class="form-row">
-              <div class="form-group">
-                <label>Movies Collection ID *</label>
-                <input type="text" id="cfgMoviesCollection" placeholder="movies" required style="font-family:'Courier New',monospace">
-              </div>
-              <div class="form-group">
-                <label>Platform Name (optionnel)</label>
-                <input type="text" id="cfgPlatform" placeholder="Série & Films for Life">
-              </div>
-            </div>
-            <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:10px">
-              <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> SAUVEGARDER</button>
-              <button type="button" class="btn btn-outline" onclick="testAppwriteConnection()"><i class="fas fa-plug"></i> TESTER CONNEXION</button>
-              <button type="button" class="btn btn-outline" onclick="clearAppwriteConfig()"><i class="fas fa-trash"></i> EFFACER</button>
-            </div>
-          </form>
-        </div>
-
-        <div class="config-form">
-          <h4><i class="fas fa-database"></i> Structure de la base de données</h4>
-          <div class="config-note">
-            <strong>Collection "users" - Attributs requis :</strong><br>
-            • <code>email</code> (string, 255)<br>
-            • <code>password</code> (string, 255)<br>
-            • <code>status</code> (string, 20) - "active" ou "disabled"<br>
-            • <code>registeredAt</code> (string, 50)<br>
-            • <code>lastLogin</code> (string, 50)<br>
-            • <code>isAdmin</code> (boolean)<br><br>
-            <strong>Collection "movies" - Attributs requis :</strong><br>
-            • <code>title</code> (string, 255)<br>
-            • <code>type</code> (string, 20) - "movie" ou "series"<br>
-            • <code>year</code> (integer)<br>
-            • <code>duration</code> (string, 50)<br>
-            • <code>genre</code> (string, 255)<br>
-            • <code>desc</code> (string, 2000)<br>
-            • <code>poster</code> (string, 500)<br>
-            • <code>video</code> (string, 500)<br>
-            • <code>download</code> (string, 500)<br>
-            • <code>isNew</code> (boolean)<br>
-            • <code>isFeatured</code> (boolean)<br>
-            • <code>views</code> (integer)<br>
-            • <code>addedAt</code> (string, 50)
+          <div class="form-row">
+            <div class="form-group"><label>Movies Collection ID *</label><input type="text" id="cfgMoviesCollection" placeholder="movies" required style="font-family:'Courier New',monospace"></div>
+            <div class="form-group"><label>Platform Name</label><input type="text" id="cfgPlatform" placeholder="Série & Films for Life"></div>
           </div>
-        </div>
-
-        <div class="config-form">
-          <h4><i class="fas fa-shield-alt"></i> Statut actuel</h4>
-          <div id="currentConfigStatus"></div>
-        </div>
+          <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:10px">
+            <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> SAUVEGARDER</button>
+            <button type="button" class="btn btn-outline" onclick="testAppwriteConnection()"><i class="fas fa-plug"></i> TESTER</button>
+            <button type="button" class="btn btn-outline" onclick="clearAppwriteConfig()"><i class="fas fa-trash"></i> EFFACER</button>
+          </div>
+        </form>
       </div>
     </div>
   </div></section>
@@ -537,21 +519,15 @@ section{padding:60px 0;position:relative}
 (function(){
 'use strict';
 
-// ============================================
-// 🔑 CONFIGURATION APPWRITE
-// ============================================
-// Remplissez ces valeurs avec vos clés Appwrite
-// Ou configurez-les via le panel admin (onglet "Appwrite Config")
 var APPWRITE_CONFIG = {
-  endpoint: '',          // Ex: https://cloud.appwrite.io/v1
-  projectId: '',         // Ex: 6xxxxxxxxxxxxxxxxxxxxxxx
-  databaseId: '',        // Ex: main_database
-  usersCollection: '',   // Ex: users
-  moviesCollection: '',  // Ex: movies
+  endpoint: '',
+  projectId: '',
+  databaseId: '',
+  usersCollection: '',
+  moviesCollection: '',
   platform: 'Série & Films for Life'
 };
 
-// Charger config sauvegardée
 try {
   var savedConfig = localStorage.getItem('sfl_appwrite_config');
   if (savedConfig) {
@@ -560,9 +536,6 @@ try {
   }
 } catch(e) {}
 
-// ============================================
-// 🚀 INITIALISATION APPWRITE
-// ============================================
 var appwriteClient = null;
 var appwriteAccount = null;
 var appwriteDatabases = null;
@@ -574,15 +547,10 @@ function initAppwrite() {
     updateDbStatus('local');
     return false;
   }
-  
   try {
     if (typeof Appwrite !== 'undefined') {
       appwriteClient = new Appwrite.Client();
-      appwriteClient
-        .setEndpoint(APPWRITE_CONFIG.endpoint)
-        .setProject(APPWRITE_CONFIG.projectId)
-        .setPlatform(APPWRITE_CONFIG.platform || window.location.hostname);
-      
+      appwriteClient.setEndpoint(APPWRITE_CONFIG.endpoint).setProject(APPWRITE_CONFIG.projectId).setPlatform(APPWRITE_CONFIG.platform || window.location.hostname);
       appwriteAccount = new Appwrite.Account(appwriteClient);
       appwriteDatabases = new Appwrite.Databases(appwriteClient);
       isAppwriteReady = true;
@@ -609,451 +577,260 @@ function updateDbStatus(type) {
       badge.innerHTML = '<i class="fas fa-hdd"></i> Local';
     }
   }
-  if (banner) {
-    banner.style.display = type === 'appwrite' ? 'none' : 'flex';
-  }
+  if (banner) banner.style.display = type === 'appwrite' ? 'none' : 'flex';
 }
 
-// ============================================
-// 💾 COUCHE DE DONNÉES (Appwrite ou LocalStorage)
-// ============================================
 var DB = {
-  // USERS
   async getUsers() {
     if (isAppwriteReady && APPWRITE_CONFIG.usersCollection) {
       try {
-        var response = await appwriteDatabases.listDocuments(
-          APPWRITE_CONFIG.databaseId,
-          APPWRITE_CONFIG.usersCollection,
-          [Appwrite.Query.limit(100)]
-        );
-        return response.documents.map(function(doc) {
-          return Object.assign({id: doc.$id}, doc);
-        });
-      } catch(e) {
-        console.error('getUsers Appwrite error:', e);
-      }
+        var response = await appwriteDatabases.listDocuments(APPWRITE_CONFIG.databaseId, APPWRITE_CONFIG.usersCollection, [Appwrite.Query.limit(100)]);
+        return response.documents.map(function(doc) { return Object.assign({id: doc.$id}, doc); });
+      } catch(e) { console.error('getUsers Appwrite error:', e); }
     }
     return getDB('users') || [];
   },
-  
   async saveUser(user) {
     if (isAppwriteReady && APPWRITE_CONFIG.usersCollection) {
       try {
-        if (user.$id) {
-          await appwriteDatabases.updateDocument(
-            APPWRITE_CONFIG.databaseId,
-            APPWRITE_CONFIG.usersCollection,
-            user.$id,
-            user
-          );
-        } else {
-          await appwriteDatabases.createDocument(
-            APPWRITE_CONFIG.databaseId,
-            APPWRITE_CONFIG.usersCollection,
-            Appwrite.ID.unique(),
-            user
-          );
-        }
+        if (user.$id) await appwriteDatabases.updateDocument(APPWRITE_CONFIG.databaseId, APPWRITE_CONFIG.usersCollection, user.$id, user);
+        else await appwriteDatabases.createDocument(APPWRITE_CONFIG.databaseId, APPWRITE_CONFIG.usersCollection, Appwrite.ID.unique(), user);
         return true;
-      } catch(e) {
-        console.error('saveUser Appwrite error:', e);
-      }
+      } catch(e) { console.error('saveUser Appwrite error:', e); }
     }
-    // Fallback localStorage
     var users = getDB('users') || [];
     var idx = users.findIndex(function(u) { return u.id === user.id; });
-    if (idx >= 0) users[idx] = user;
-    else users.push(user);
+    if (idx >= 0) users[idx] = user; else users.push(user);
     setDB('users', users);
     return true;
   },
-  
   async updateUserStatus(userId, status) {
     if (isAppwriteReady && APPWRITE_CONFIG.usersCollection) {
       try {
         var users = await this.getUsers();
         var user = users.find(function(u) { return u.id === userId; });
         if (user && user.$id) {
-          await appwriteDatabases.updateDocument(
-            APPWRITE_CONFIG.databaseId,
-            APPWRITE_CONFIG.usersCollection,
-            user.$id,
-            { status: status }
-          );
+          await appwriteDatabases.updateDocument(APPWRITE_CONFIG.databaseId, APPWRITE_CONFIG.usersCollection, user.$id, { status: status });
           return true;
         }
-      } catch(e) {
-        console.error('updateUserStatus error:', e);
-      }
+      } catch(e) { console.error('updateUserStatus error:', e); }
     }
     var users = getDB('users') || [];
-    for (var i = 0; i < users.length; i++) {
-      if (users[i].id === userId) { users[i].status = status; break; }
-    }
+    for (var i = 0; i < users.length; i++) { if (users[i].id === userId) { users[i].status = status; break; } }
     setDB('users', users);
     return true;
   },
-  
   async deleteUser(userId) {
     if (isAppwriteReady && APPWRITE_CONFIG.usersCollection) {
       try {
         var users = await this.getUsers();
         var user = users.find(function(u) { return u.id === userId; });
-        if (user && user.$id) {
-          await appwriteDatabases.deleteDocument(
-            APPWRITE_CONFIG.databaseId,
-            APPWRITE_CONFIG.usersCollection,
-            user.$id
-          );
-          return true;
-        }
-      } catch(e) {
-        console.error('deleteUser error:', e);
-      }
+        if (user && user.$id) { await appwriteDatabases.deleteDocument(APPWRITE_CONFIG.databaseId, APPWRITE_CONFIG.usersCollection, user.$id); return true; }
+      } catch(e) { console.error('deleteUser error:', e); }
     }
     var users = getDB('users') || [];
     setDB('users', users.filter(function(u) { return u.id !== userId; }));
     return true;
   },
-  
-  // MOVIES
   async getMovies() {
     if (isAppwriteReady && APPWRITE_CONFIG.moviesCollection) {
       try {
-        var response = await appwriteDatabases.listDocuments(
-          APPWRITE_CONFIG.databaseId,
-          APPWRITE_CONFIG.moviesCollection,
-          [Appwrite.Query.limit(500)]
-        );
-        return response.documents.map(function(doc) {
-          return Object.assign({id: doc.$id}, doc);
-        });
-      } catch(e) {
-        console.error('getMovies Appwrite error:', e);
-      }
+        var response = await appwriteDatabases.listDocuments(APPWRITE_CONFIG.databaseId, APPWRITE_CONFIG.moviesCollection, [Appwrite.Query.limit(500)]);
+        return response.documents.map(function(doc) { return Object.assign({id: doc.$id}, doc); });
+      } catch(e) { console.error('getMovies Appwrite error:', e); }
     }
     return getDB('movies') || [];
   },
-  
   async saveMovie(movie) {
     if (isAppwriteReady && APPWRITE_CONFIG.moviesCollection) {
       try {
-        if (movie.$id) {
-          await appwriteDatabases.updateDocument(
-            APPWRITE_CONFIG.databaseId,
-            APPWRITE_CONFIG.moviesCollection,
-            movie.$id,
-            movie
-          );
-        } else {
-          await appwriteDatabases.createDocument(
-            APPWRITE_CONFIG.databaseId,
-            APPWRITE_CONFIG.moviesCollection,
-            Appwrite.ID.unique(),
-            movie
-          );
-        }
+        if (movie.$id) await appwriteDatabases.updateDocument(APPWRITE_CONFIG.databaseId, APPWRITE_CONFIG.moviesCollection, movie.$id, movie);
+        else await appwriteDatabases.createDocument(APPWRITE_CONFIG.databaseId, APPWRITE_CONFIG.moviesCollection, Appwrite.ID.unique(), movie);
         return true;
-      } catch(e) {
-        console.error('saveMovie Appwrite error:', e);
-      }
+      } catch(e) { console.error('saveMovie Appwrite error:', e); }
     }
     var movies = getDB('movies') || [];
     var idx = movies.findIndex(function(m) { return m.id === movie.id; });
-    if (idx >= 0) movies[idx] = movie;
-    else movies.push(movie);
+    if (idx >= 0) movies[idx] = movie; else movies.push(movie);
     setDB('movies', movies);
     return true;
   },
-  
   async updateMovieViews(movieId) {
     if (isAppwriteReady && APPWRITE_CONFIG.moviesCollection) {
       try {
         var movies = await this.getMovies();
         var movie = movies.find(function(m) { return m.id === movieId; });
         if (movie && movie.$id) {
-          await appwriteDatabases.updateDocument(
-            APPWRITE_CONFIG.databaseId,
-            APPWRITE_CONFIG.moviesCollection,
-            movie.$id,
-            { views: (movie.views || 0) + 1 }
-          );
+          await appwriteDatabases.updateDocument(APPWRITE_CONFIG.databaseId, APPWRITE_CONFIG.moviesCollection, movie.$id, { views: (movie.views || 0) + 1 });
           return true;
         }
-      } catch(e) {
-        console.error('updateMovieViews error:', e);
-      }
+      } catch(e) { console.error('updateMovieViews error:', e); }
     }
     var movies = getDB('movies') || [];
-    for (var i = 0; i < movies.length; i++) {
-      if (movies[i].id === movieId) { movies[i].views = (movies[i].views || 0) + 1; break; }
-    }
+    for (var i = 0; i < movies.length; i++) { if (movies[i].id === movieId) { movies[i].views = (movies[i].views || 0) + 1; break; } }
     setDB('movies', movies);
     return true;
   },
-  
   async deleteMovie(movieId) {
     if (isAppwriteReady && APPWRITE_CONFIG.moviesCollection) {
       try {
         var movies = await this.getMovies();
         var movie = movies.find(function(m) { return m.id === movieId; });
-        if (movie && movie.$id) {
-          await appwriteDatabases.deleteDocument(
-            APPWRITE_CONFIG.databaseId,
-            APPWRITE_CONFIG.moviesCollection,
-            movie.$id
-          );
-          return true;
-        }
-      } catch(e) {
-        console.error('deleteMovie error:', e);
-      }
+        if (movie && movie.$id) { await appwriteDatabases.deleteDocument(APPWRITE_CONFIG.databaseId, APPWRITE_CONFIG.moviesCollection, movie.$id); return true; }
+      } catch(e) { console.error('deleteMovie error:', e); }
     }
     var movies = getDB('movies') || [];
     setDB('movies', movies.filter(function(m) { return m.id !== movieId; }));
     return true;
   },
-  
-  // AUTH (Appwrite Auth pour multi-appareils)
   async register(email, password) {
     if (isAppwriteReady && appwriteAccount) {
       try {
-        var account = await appwriteAccount.create(
-          Appwrite.ID.unique(),
-          email,
-          password
-        );
+        var account = await appwriteAccount.create(Appwrite.ID.unique(), email, password);
         await appwriteAccount.createEmailPasswordSession(email, password);
         return { success: true, userId: account.$id };
-      } catch(e) {
-        return { success: false, error: e.message };
-      }
+      } catch(e) { return { success: false, error: e.message }; }
     }
     return { success: false, error: 'Appwrite non configuré' };
   },
-  
   async login(email, password) {
     if (isAppwriteReady && appwriteAccount) {
       try {
         await appwriteAccount.createEmailPasswordSession(email, password);
         var account = await appwriteAccount.get();
         return { success: true, userId: account.$id, email: account.email };
-      } catch(e) {
-        return { success: false, error: e.message };
-      }
+      } catch(e) { return { success: false, error: e.message }; }
     }
     return { success: false, error: 'Appwrite non configuré' };
   },
-  
   async logout() {
-    if (isAppwriteReady && appwriteAccount) {
-      try {
-        await appwriteAccount.deleteSession('current');
-      } catch(e) {}
-    }
+    if (isAppwriteReady && appwriteAccount) { try { await appwriteAccount.deleteSession('current'); } catch(e) {} }
   },
-  
-  async getCurrentSession() {
-    if (isAppwriteReady && appwriteAccount) {
-      try {
-        var account = await appwriteAccount.get();
-        return { success: true, userId: account.$id, email: account.email };
-      } catch(e) {
-        return { success: false };
-      }
-    }
-    return { success: false };
-  },
-  
   async getSessions() {
     if (isAppwriteReady && appwriteAccount) {
-      try {
-        var response = await appwriteAccount.listSessions();
-        return response.sessions || [];
-      } catch(e) {
-        return [];
-      }
+      try { var response = await appwriteAccount.listSessions(); return response.sessions || []; } catch(e) { return []; }
     }
     return [];
   }
 };
 
-// LocalStorage helpers (fallback)
-function setDB(key, val) {
-  try { localStorage.setItem('sfl_' + key, JSON.stringify(val)); return true; }
-  catch (e) { console.error('setDB error:', e); return false; }
-}
-
-function getDB(key) {
-  try {
-    var val = localStorage.getItem('sfl_' + key);
-    return val ? JSON.parse(val) : null;
-  } catch (e) { console.error('getDB error:', e); return null; }
-}
-
+function setDB(key, val) { try { localStorage.setItem('sfl_' + key, JSON.stringify(val)); return true; } catch (e) { return false; } }
+function getDB(key) { try { var val = localStorage.getItem('sfl_' + key); return val ? JSON.parse(val) : null; } catch (e) { return null; } }
 function fmtDate(d){if(!d)return'—';try{var dt=new Date(d);return dt.toLocaleDateString('fr-FR')+' '+dt.toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'})}catch(e){return d}}
 function fmtDateShort(d){if(!d)return'—';try{return new Date(d).toLocaleDateString('fr-FR')}catch(e){return d}}
 
 // ============================================
-// 🎬 DONNÉES PAR DÉFAUT
+// 🎬 CONVERSION LIENS VIDÉO (Mega, Google Drive, Pcloud, YouTube)
 // ============================================
-var DEFAULT_MOVIES = [
-  {
-    id: "MOV_001",
-    title: "Inception",
-    type: "movie",
-    year: 2010,
-    duration: "2h 28min",
-    genre: "Sci-Fi, Action",
-    desc: "Un voleur qui s'infiltre dans les rêves des autres pour voler leurs secrets se voit confier la tâche inverse : implanter une idée dans l'esprit d'un PDG.",
-    poster: "https://images.unsplash.com/photo-1440404653325-ab127d49abc1?w=400&q=80",
-    video: "https://www.youtube.com/embed/YoHD9XEInc0",
-    download: "",
-    isNew: true,
-    isFeatured: true,
-    views: 0,
-    addedAt: "2026-01-15"
-  },
-  {
-    id: "MOV_002",
-    title: "The Dark Knight",
-    type: "movie",
-    year: 2008,
-    duration: "2h 32min",
-    genre: "Action, Crime",
-    desc: "Batman doit accepter l'une des plus grandes考验 psychologiques et physiques de sa capacité à combattre l'injustice face au Joker.",
-    poster: "https://images.unsplash.com/photo-1478720568477-152d9b164e26?w=400&q=80",
-    video: "https://www.youtube.com/embed/EXeTwQWrcwY",
-    download: "",
-    isNew: false,
-    isFeatured: true,
-    views: 0,
-    addedAt: "2026-01-10"
-  },
-  {
-    id: "MOV_003",
-    title: "Breaking Bad",
-    type: "series",
-    year: 2008,
-    duration: "5 saisons",
-    genre: "Drame, Crime",
-    desc: "Un professeur de chimie diagnostiqué avec un cancer du poumon se tourne vers la fabrication de méthamphétamine pour assurer l'avenir financier de sa famille.",
-    poster: "https://images.unsplash.com/photo-1574375927938-d5a98e8ffe85?w=400&q=80",
-    video: "https://www.youtube.com/embed/HhesaQXLuRY",
-    download: "",
-    isNew: true,
-    isFeatured: true,
-    views: 0,
-    addedAt: "2026-01-20"
-  },
-  {
-    id: "MOV_004",
-    title: "Stranger Things",
-    type: "series",
-    year: 2016,
-    duration: "4 saisons",
-    genre: "Sci-Fi, Horreur",
-    desc: "Quand un jeune garçon disparaît, une petite ville découvre un mystère impliquant des expériences secrètes, des forces surnaturelles terrifiantes et une étrange petite fille.",
-    poster: "https://images.unsplash.com/photo-1509347528160-9a9e33742cdb?w=400&q=80",
-    video: "https://www.youtube.com/embed/b9EkMc79ZSU",
-    download: "",
-    isNew: true,
-    isFeatured: false,
-    views: 0,
-    addedAt: "2026-01-18"
+function getEmbedUrl(url) {
+  if (!url) return null;
+  url = url.trim();
+  
+  // YouTube
+  if (url.indexOf('youtube.com') !== -1 || url.indexOf('youtu.be') !== -1) {
+    var videoId = '';
+    if (url.indexOf('youtu.be/') !== -1) videoId = url.split('youtu.be/')[1].split('?')[0];
+    else if (url.indexOf('v=') !== -1) videoId = url.split('v=')[1].split('&')[0];
+    else if (url.indexOf('/embed/') !== -1) return url;
+    if (videoId) return 'https://www.youtube.com/embed/' + videoId + '?autoplay=1&rel=0';
   }
+  
+  // Google Drive
+  if (url.indexOf('drive.google.com') !== -1) {
+    var match = url.match(/\/d\/([a-zA-Z0-9_-]+)/);
+    if (match) return 'https://drive.google.com/file/d/' + match[1] + '/preview';
+    if (url.indexOf('/preview') !== -1) return url;
+    if (url.indexOf('/view') !== -1) return url.replace('/view', '/preview');
+  }
+  
+  // Mega.nz
+  if (url.indexOf('mega.nz') !== -1 || url.indexOf('mega.co.nz') !== -1) {
+    var megaMatch = url.match(/mega\.nz\/(?:file|folder|embed)\/([a-zA-Z0-9#_-]+)/);
+    if (megaMatch) {
+      var megaId = megaMatch[1];
+      if (megaId.indexOf('#') !== -1) megaId = megaId.split('#')[0];
+      return 'https://mega.nz/embed/' + megaId;
+    }
+    if (url.indexOf('/embed/') !== -1) return url;
+    return url.replace('/file/', '/embed/').replace('/folder/', '/embed/');
+  }
+  
+  // Pcloud
+  if (url.indexOf('pcloud.com') !== -1) {
+    var pcloudMatch = url.match(/fileid=([0-9]+)/);
+    if (pcloudMatch) return 'https://www.pcloud.com/embedfile.html?fileid=' + pcloudMatch[1] + '&autoplay=1';
+    if (url.indexOf('/embedfile.html') !== -1) return url;
+    return url.replace('/file/', '/embedfile.html?fileid=').replace(/\/$/, '');
+  }
+  
+  // Liens directs MP4, WebM, etc.
+  if (url.match(/\.(mp4|webm|ogg|mov)(\?|$)/i)) {
+    return url;
+  }
+  
+  // Fallback: retourner le lien tel quel
+  return url;
+}
+
+function detectVideoType(url) {
+  if (!url) return 'unknown';
+  if (url.indexOf('youtube.com') !== -1 || url.indexOf('youtu.be') !== -1) return 'youtube';
+  if (url.indexOf('drive.google.com') !== -1) return 'gdrive';
+  if (url.indexOf('mega.nz') !== -1 || url.indexOf('mega.co.nz') !== -1) return 'mega';
+  if (url.indexOf('pcloud.com') !== -1) return 'pcloud';
+  if (url.match(/\.(mp4|webm|ogg|mov)(\?|$)/i)) return 'direct';
+  return 'embed';
+}
+
+var DEFAULT_MOVIES = [
+  { id: "MOV_001", title: "Inception", type: "movie", year: 2010, duration: "2h 28min", genre: "Sci-Fi, Action", desc: "Un voleur qui s'infiltre dans les rêves des autres pour voler leurs secrets se voit confier la tâche inverse.", poster: "https://images.unsplash.com/photo-1440404653325-ab127d49abc1?w=400&q=80", video: "https://www.youtube.com/embed/YoHD9XEInc0", download: "", isNew: true, isFeatured: true, views: 0, addedAt: "2026-01-15" },
+  { id: "MOV_002", title: "The Dark Knight", type: "movie", year: 2008, duration: "2h 32min", genre: "Action, Crime", desc: "Batman doit combattre l'injustice face au Joker.", poster: "https://images.unsplash.com/photo-1478720568477-152d9b164e26?w=400&q=80", video: "https://www.youtube.com/embed/EXeTwQWrcwY", download: "", isNew: false, isFeatured: true, views: 0, addedAt: "2026-01-10" },
+  { id: "MOV_003", title: "Breaking Bad", type: "series", year: 2008, duration: "5 saisons", genre: "Drame, Crime", desc: "Un professeur de chimie se tourne vers la fabrication de méthamphétamine.", poster: "https://images.unsplash.com/photo-1574375927938-d5a98e8ffe85?w=400&q=80", video: "https://www.youtube.com/embed/HhesaQXLuRY", download: "", isNew: true, isFeatured: true, views: 0, addedAt: "2026-01-20" },
+  { id: "MOV_004", title: "Stranger Things", type: "series", year: 2016, duration: "4 saisons", genre: "Sci-Fi, Horreur", desc: "Quand un jeune garçon disparaît, une petite ville découvre un mystère.", poster: "https://images.unsplash.com/photo-1509347528160-9a9e33742cdb?w=400&q=80", video: "https://www.youtube.com/embed/b9EkMc79ZSU", download: "", isNew: true, isFeatured: false, views: 0, addedAt: "2026-01-18" }
 ];
 
-var DEFAULT_ADMIN = {
-  id: "USR_ADMIN",
-  email: "admin@sfl.com",
-  password: "admin1234",
-  registeredAt: "2026-01-01",
-  status: "active",
-  lastLogin: null,
-  isAdmin: true
-};
+var DEFAULT_ADMIN = { id: "USR_ADMIN", email: "admin@sfl.com", password: "admin1234", registeredAt: "2026-01-01", status: "active", lastLogin: null, isAdmin: true };
 
 async function initDB() {
-  // Initialiser Appwrite si configuré
   initAppwrite();
-  
-  // Fallback localStorage si Appwrite non prêt
   if (!isAppwriteReady) {
     var existingUsers = getDB('users');
-    if (!existingUsers || !Array.isArray(existingUsers)) {
-      setDB('users', [DEFAULT_ADMIN]);
-    }
+    if (!existingUsers || !Array.isArray(existingUsers)) setDB('users', [DEFAULT_ADMIN]);
     var existingMovies = getDB('movies');
-    if (!existingMovies || !Array.isArray(existingMovies)) {
-      setDB('movies', DEFAULT_MOVIES);
-    }
+    if (!existingMovies || !Array.isArray(existingMovies)) setDB('movies', DEFAULT_MOVIES);
   } else {
-    // Avec Appwrite, vérifier si les données existent
     var users = await DB.getUsers();
-    if (!users || users.length === 0) {
-      await DB.saveUser(DEFAULT_ADMIN);
-    }
+    if (!users || users.length === 0) await DB.saveUser(DEFAULT_ADMIN);
     var movies = await DB.getMovies();
-    if (!movies || movies.length === 0) {
-      for (var i = 0; i < DEFAULT_MOVIES.length; i++) {
-        await DB.saveMovie(DEFAULT_MOVIES[i]);
-      }
-    }
+    if (!movies || movies.length === 0) { for (var i = 0; i < DEFAULT_MOVIES.length; i++) await DB.saveMovie(DEFAULT_MOVIES[i]); }
   }
 }
 
 var SESSION_KEY = 'sfl_session';
-
-function getSession() {
-  try {
-    var s = localStorage.getItem(SESSION_KEY);
-    return s ? JSON.parse(s) : null;
-  } catch (e) { return null; }
-}
-
-function setSession(user) {
-  try { localStorage.setItem(SESSION_KEY, JSON.stringify(user)); }
-  catch (e) { console.error('setSession error:', e); }
-}
-
-function clearSession() {
-  try { localStorage.removeItem(SESSION_KEY); }
-  catch (e) { console.error('clearSession error:', e); }
-}
+function getSession() { try { var s = localStorage.getItem(SESSION_KEY); return s ? JSON.parse(s) : null; } catch (e) { return null; } }
+function setSession(user) { try { localStorage.setItem(SESSION_KEY, JSON.stringify(user)); } catch (e) {} }
+function clearSession() { try { localStorage.removeItem(SESSION_KEY); } catch (e) {} }
 
 function go(pg) {
   try {
     var pages = document.querySelectorAll('.page');
     for (var i = 0; i < pages.length; i++) pages[i].classList.remove('active');
     var t = document.getElementById('page-' + pg);
-    if (t) {
-      t.classList.add('active');
-      window.scrollTo({top: 0, behavior: 'smooth'});
-    }
+    if (t) { t.classList.add('active'); window.scrollTo({top: 0, behavior: 'smooth'}); }
     if (pg === 'dashboard') renderDashboard();
     if (pg === 'admin') renderAdmin();
     if (pg === 'home') renderHome();
+    if (pg === 'player') { document.body.style.overflow = 'hidden'; }
+    else { document.body.style.overflow = 'auto'; }
   } catch (e) { console.error('go error:', e); }
 }
 
-function scrollToSection(id) {
-  go('home');
-  setTimeout(function() {
-    var el = document.getElementById(id);
-    if (el) el.scrollIntoView({behavior: 'smooth'});
-  }, 200);
-}
-
-function toggleMobile() {
-  document.getElementById('mobileMenu').classList.toggle('open');
-}
+function scrollToSection(id) { go('home'); setTimeout(function() { var el = document.getElementById(id); if (el) el.scrollIntoView({behavior: 'smooth'}); }, 200); }
+function toggleMobile() { document.getElementById('mobileMenu').classList.toggle('open'); }
 
 async function renderHome() {
   var movies = await DB.getMovies();
   var users = await DB.getUsers();
-  
   document.getElementById('statMovies').textContent = movies.filter(function(m) { return m.type === 'movie'; }).length;
   document.getElementById('statSeries').textContent = movies.filter(function(m) { return m.type === 'series'; }).length;
   document.getElementById('statUsers').textContent = users.filter(function(u) { return !u.isAdmin; }).length;
@@ -1077,15 +854,13 @@ async function renderHome() {
     h += '</div>';
     fg.innerHTML = h;
   }
-  
-  var newMovies = movies.filter(function(m) { return m.isNew; });
-  document.getElementById('newGrid').innerHTML = renderMoviesGrid(newMovies);
+  document.getElementById('newGrid').innerHTML = renderMoviesGrid(movies.filter(function(m) { return m.isNew; }));
   document.getElementById('moviesGrid').innerHTML = renderMoviesGrid(movies.filter(function(m) { return m.type === 'movie'; }));
   document.getElementById('seriesGrid').innerHTML = renderMoviesGrid(movies.filter(function(m) { return m.type === 'series'; }));
 }
 
 function renderMoviesGrid(movies) {
-  if (!movies || movies.length === 0) return '<div class="empty-state"><i class="fas fa-film"></i><p>Aucun film disponible pour le moment.</p></div>';
+  if (!movies || movies.length === 0) return '<div class="empty-state"><i class="fas fa-film"></i><p>Aucun film disponible.</p></div>';
   var h = '';
   for (var i = 0; i < movies.length; i++) {
     var m = movies[i];
@@ -1107,24 +882,18 @@ async function renderDashboard() {
   if (!session) { go('home'); return; }
   var users = await DB.getUsers();
   var u = null;
-  for (var i = 0; i < users.length; i++) {
-    if (users[i].id === session.userId) { u = users[i]; break; }
-  }
+  for (var i = 0; i < users.length; i++) { if (users[i].id === session.userId) { u = users[i]; break; } }
   if (!u) { clearSession(); go('home'); return; }
   
   var banner = document.getElementById('dashStatusBanner');
-  if (u.status === 'disabled') {
-    banner.innerHTML = '<div class="alert alert-warn" style="margin-bottom:20px"><i class="fas fa-exclamation-triangle"></i><div><strong>Compte en attente d\'approbation</strong><div style="font-size:13px;margin-top:4px">Votre compte a été désactivé. Contactez l\'administration.</div></div></div>';
-  } else {
-    banner.innerHTML = '';
-  }
+  if (u.status === 'disabled') banner.innerHTML = '<div class="alert alert-warn" style="margin-bottom:20px"><i class="fas fa-exclamation-triangle"></i><div><strong>Compte désactivé</strong><div style="font-size:13px;margin-top:4px">Contactez l\'administration.</div></div></div>';
+  else banner.innerHTML = '';
   
   document.getElementById('dashName').textContent = u.email.split('@')[0].toUpperCase();
   document.getElementById('dashEmail').textContent = u.email;
   document.getElementById('dashSince').textContent = fmtDateShort(u.registeredAt);
   document.getElementById('dashLastLogin').textContent = fmtDate(u.lastLogin);
   
-  // Afficher nombre d'appareils connectés (Appwrite)
   if (isAppwriteReady) {
     var sessions = await DB.getSessions();
     document.getElementById('dashDevices').textContent = sessions.length + ' appareil(s)';
@@ -1134,7 +903,6 @@ async function renderDashboard() {
   
   var movies = await DB.getMovies();
   document.getElementById('dashStats').innerHTML = '<div class="dash-stat"><i class="fas fa-film"></i><strong>' + movies.length + '</strong><span>Films & Séries</span></div><div class="dash-stat"><i class="fas fa-play-circle"></i><strong>' + movies.filter(function(m) { return m.type === 'movie'; }).length + '</strong><span>Films</span></div><div class="dash-stat"><i class="fas fa-tv"></i><strong>' + movies.filter(function(m) { return m.type === 'series'; }).length + '</strong><span>Séries</span></div><div class="dash-stat"><i class="fas fa-star"></i><strong>HD</strong><span>Qualité</span></div>';
-  
   document.getElementById('dashMovies').innerHTML = renderMoviesGrid(movies);
 }
 
@@ -1142,31 +910,19 @@ var currentMovie = null;
 
 async function openPlayer(movieId) {
   var session = getSession();
-  if (!session) {
-    openModal('login');
-    toast('Connexion requise', 'Connectez-vous pour regarder.');
-    return;
-  }
+  if (!session) { openModal('login'); toast('Connexion requise', 'Connectez-vous pour regarder.'); return; }
   var users = await DB.getUsers();
   var u = null;
-  for (var i = 0; i < users.length; i++) {
-    if (users[i].id === session.userId) { u = users[i]; break; }
-  }
-  if (!u || u.status === 'disabled') {
-    toast('Accès refusé', 'Votre compte n\'est pas actif.');
-    return;
-  }
+  for (var i = 0; i < users.length; i++) { if (users[i].id === session.userId) { u = users[i]; break; } }
+  if (!u || u.status === 'disabled') { toast('Accès refusé', 'Votre compte n\'est pas actif.'); return; }
   
   var movies = await DB.getMovies();
   var m = null;
-  for (var i = 0; i < movies.length; i++) {
-    if (movies[i].id === movieId) { m = movies[i]; break; }
-  }
+  for (var i = 0; i < movies.length; i++) { if (movies[i].id === movieId) { m = movies[i]; break; } }
   if (!m) return;
   
   await DB.updateMovieViews(movieId);
   m.views = (m.views || 0) + 1;
-  
   currentMovie = m;
   go('player');
   renderPlayer();
@@ -1174,28 +930,83 @@ async function openPlayer(movieId) {
 
 function renderPlayer() {
   if (!currentMovie) return;
-  document.getElementById('playerTitle').textContent = currentMovie.title;
-  document.getElementById('playerMeta').innerHTML = '<span><i class="fas fa-calendar"></i> ' + currentMovie.year + '</span><span><i class="fas fa-clock"></i> ' + currentMovie.duration + '</span><span><i class="fas fa-film"></i> ' + currentMovie.genre + '</span><span><i class="fas fa-eye"></i> ' + currentMovie.views + ' vues</span>';
-  document.getElementById('playerDesc').textContent = currentMovie.desc;
+  document.getElementById('playerTitleBig').textContent = currentMovie.title;
+  document.getElementById('playerMetaBig').textContent = currentMovie.year + ' • ' + currentMovie.genre + ' • ' + currentMovie.duration;
+  document.getElementById('controlsTitle').textContent = currentMovie.title;
+  document.getElementById('controlsMeta').textContent = currentMovie.year + ' • ' + currentMovie.genre + ' • ' + currentMovie.duration;
   
-  var dlBtn = document.getElementById('downloadBtn');
-  if (currentMovie.download) {
-    dlBtn.href = currentMovie.download;
-    dlBtn.style.display = 'inline-flex';
-  } else {
-    dlBtn.style.display = 'none';
+  var ct = document.getElementById('videoContainerFull');
+  ct.innerHTML = '<div class="video-placeholder-full" onclick="playVideo()"><div class="play-btn-big"><i class="fas fa-play"></i></div><p>Cliquez pour lancer le film</p><div class="movie-title-overlay"><h2>' + currentMovie.title + '</h2><p>' + currentMovie.year + ' • ' + currentMovie.genre + ' • ' + currentMovie.duration + '</p></div></div>';
+  document.getElementById('videoControlsBar').style.display = 'none';
+}
+
+function closePlayer() {
+  var ct = document.getElementById('videoContainerFull');
+  ct.innerHTML = '<div class="video-placeholder-full" onclick="playVideo()"><div class="play-btn-big"><i class="fas fa-play"></i></div><p>Cliquez pour lancer le film</p></div>';
+  document.getElementById('videoControlsBar').style.display = 'none';
+  currentMovie = null;
+  if (document.fullscreenElement) {
+    document.exitFullscreen().catch(function(){});
   }
-  
-  var ct = document.getElementById('videoContainer');
-  ct.innerHTML = '<div class="video-placeholder" onclick="playVideo()"><div class="play-btn"><i class="fas fa-play"></i></div><p>Cliquez pour lancer la vidéo</p></div>';
+  go('dashboard');
 }
 
 function playVideo() {
   if (!currentMovie) return;
-  var ct = document.getElementById('videoContainer');
-  ct.innerHTML = '<div class="video-container"><iframe src="' + currentMovie.video + '" allow="autoplay; encrypted-media; fullscreen" allowfullscreen style="position:absolute;top:0;left:0;width:100%;height:100%;border:0"></iframe></div>';
-  toast('Lecture en cours', currentMovie.title);
+  var ct = document.getElementById('videoContainerFull');
+  var videoUrl = currentMovie.video;
+  var embedUrl = getEmbedUrl(videoUrl);
+  var videoType = detectVideoType(videoUrl);
+  
+  // Afficher le spinner de chargement
+  ct.innerHTML = '<div class="video-loading"><i class="fas fa-circle-notch fa-spin"></i></div>';
+  
+  setTimeout(function() {
+    if (videoType === 'direct') {
+      // Vidéo directe MP4/WebM - utiliser balise video native
+      ct.innerHTML = '<video id="nativeVideoPlayer" src="' + embedUrl + '" controls autoplay style="width:100%;height:100%;background:#000;object-fit:contain" playsinline webkit-playsinline></video>';
+      var video = document.getElementById('nativeVideoPlayer');
+      if (video) {
+        video.play().catch(function(e) { console.log('Autoplay blocked:', e); });
+        video.onended = function() {
+          // Quand la vidéo finit, revenir à l'écran d'accueil sans rien afficher
+          ct.innerHTML = '<div class="video-placeholder-full"><div class="play-btn-big"><i class="fas fa-check"></i></div><p>Film terminé</p></div>';
+          document.getElementById('videoControlsBar').style.display = 'none';
+        };
+      }
+    } else if (embedUrl) {
+      // Iframe pour YouTube, Google Drive, Mega, Pcloud
+      ct.innerHTML = '<iframe src="' + embedUrl + '" allow="autoplay; encrypted-media; fullscreen; picture-in-picture" allowfullscreen style="position:absolute;top:0;left:0;width:100%;height:100%;border:0;background:#000"></iframe>';
+    } else {
+      ct.innerHTML = '<div class="video-placeholder-full"><div class="play-btn-big"><i class="fas fa-exclamation-triangle"></i></div><p>Lien vidéo non supporté</p></div>';
+    }
+    
+    // Afficher la barre de contrôle après 2 secondes
+    setTimeout(function() {
+      document.getElementById('videoControlsBar').style.display = 'flex';
+    }, 2000);
+  }, 500);
 }
+
+function toggleFullscreen() {
+  var elem = document.getElementById('videoWrapFull');
+  if (!document.fullscreenElement) {
+    if (elem.requestFullscreen) elem.requestFullscreen();
+    else if (elem.webkitRequestFullscreen) elem.webkitRequestFullscreen();
+    else if (elem.msRequestFullscreen) elem.msRequestFullscreen();
+    document.getElementById('fullscreenIcon').className = 'fas fa-compress';
+  } else {
+    if (document.exitFullscreen) document.exitFullscreen();
+    else if (document.webkitExitFullscreen) document.webkitExitFullscreen();
+    document.getElementById('fullscreenIcon').className = 'fas fa-expand';
+  }
+}
+
+// Écouter les changements de plein écran
+document.addEventListener('fullscreenchange', function() {
+  var icon = document.getElementById('fullscreenIcon');
+  if (icon) icon.className = document.fullscreenElement ? 'fas fa-compress' : 'fas fa-expand';
+});
 
 function adminTab(n, b) {
   var tabs = document.querySelectorAll('.admin-tab');
@@ -1214,9 +1025,7 @@ async function renderAdmin() {
   if (!session) { go('home'); return; }
   var users = await DB.getUsers();
   var admin = null;
-  for (var i = 0; i < users.length; i++) {
-    if (users[i].id === session.userId && users[i].isAdmin) { admin = users[i]; break; }
-  }
+  for (var i = 0; i < users.length; i++) { if (users[i].id === session.userId && users[i].isAdmin) { admin = users[i]; break; } }
   if (!admin) { go('home'); return; }
   
   var movies = await DB.getMovies();
@@ -1274,18 +1083,13 @@ function renderUsersTable() {
       h += '<td style="font-size:11px">' + fmtDate(u.lastLogin) + '</td>';
       h += '<td><span class="badge ' + (u.status === 'active' ? 'badge-active' : 'badge-disabled') + '">' + (u.status === 'active' ? 'Actif' : 'Désactivé') + '</span></td>';
       h += '<td><div class="table-actions">';
-      if (u.status === 'active') {
-        h += '<button class="icon-btn danger" onclick="toggleUserStatus(\'' + u.id + '\',\'disabled\')" title="Désactiver"><i class="fas fa-ban"></i></button>';
-      } else {
-        h += '<button class="icon-btn success" onclick="toggleUserStatus(\'' + u.id + '\',\'active\')" title="Approuver"><i class="fas fa-check"></i></button>';
-      }
+      if (u.status === 'active') h += '<button class="icon-btn danger" onclick="toggleUserStatus(\'' + u.id + '\',\'disabled\')" title="Désactiver"><i class="fas fa-ban"></i></button>';
+      else h += '<button class="icon-btn success" onclick="toggleUserStatus(\'' + u.id + '\',\'active\')" title="Approuver"><i class="fas fa-check"></i></button>';
       h += '<button class="icon-btn danger" onclick="deleteUser(\'' + u.id + '\')" title="Supprimer"><i class="fas fa-trash"></i></button>';
       h += '</div></td>';
       h += '</tr>';
     }
-    if (!hasUsers) {
-      h = '<tr><td colspan="5"><div class="empty-state"><i class="fas fa-users"></i><p>Aucun membre inscrit.</p></div></td></tr>';
-    }
+    if (!hasUsers) h = '<tr><td colspan="5"><div class="empty-state"><i class="fas fa-users"></i><p>Aucun membre inscrit.</p></div></td></tr>';
     tbody.innerHTML = h;
   });
 }
@@ -1293,32 +1097,19 @@ function renderUsersTable() {
 function renderConfigStatus() {
   var div = document.getElementById('currentConfigStatus');
   if (!div) return;
-  
   var h = '<div style="padding:16px;background:var(--bg-3);border-radius:10px;margin-bottom:12px">';
-  h += '<div style="display:flex;justify-content:space-between;margin-bottom:8px"><span style="color:var(--text-2)">Statut:</span><strong style="color:' + (isAppwriteReady ? '#00C853' : '#FF9800') + '">' + (isAppwriteReady ? '✓ Connecté à Appwrite' : '⚠ Mode Local (localStorage)') + '</strong></div>';
+  h += '<div style="display:flex;justify-content:space-between;margin-bottom:8px"><span style="color:var(--text-2)">Statut:</span><strong style="color:' + (isAppwriteReady ? '#00C853' : '#FF9800') + '">' + (isAppwriteReady ? '✓ Connecté à Appwrite' : '⚠ Mode Local') + '</strong></div>';
   h += '<div style="display:flex;justify-content:space-between;margin-bottom:8px"><span style="color:var(--text-2)">Endpoint:</span><strong style="color:var(--text);font-family:monospace;font-size:12px">' + (APPWRITE_CONFIG.endpoint || '—') + '</strong></div>';
-  h += '<div style="display:flex;justify-content:space-between;margin-bottom:8px"><span style="color:var(--text-2)">Project ID:</span><strong style="color:var(--text);font-family:monospace;font-size:12px">' + (APPWRITE_CONFIG.projectId || '—') + '</strong></div>';
-  h += '<div style="display:flex;justify-content:space-between;margin-bottom:8px"><span style="color:var(--text-2)">Database:</span><strong style="color:var(--text);font-family:monospace;font-size:12px">' + (APPWRITE_CONFIG.databaseId || '—') + '</strong></div>';
   h += '<div style="display:flex;justify-content:space-between"><span style="color:var(--text-2)">Multi-appareils:</span><strong style="color:' + (isAppwriteReady ? '#00C853' : '#FF9800') + '">' + (isAppwriteReady ? '✓ Activé' : '✗ Désactivé') + '</strong></div>';
   h += '</div>';
-  
-  if (!isAppwriteReady) {
-    h += '<div class="alert alert-info"><i class="fas fa-info-circle"></i><div><strong>Mode Local activé</strong><div style="font-size:12px;margin-top:4px">Les données sont stockées uniquement sur cet appareil. Configurez Appwrite pour synchroniser sur tous les appareils.</div></div></div>';
-  } else {
-    h += '<div class="alert alert-ok"><i class="fas fa-check-circle"></i><div><strong>Appwrite connecté</strong><div style="font-size:12px;margin-top:4px">Les utilisateurs peuvent se connecter sur plusieurs appareils. Les données sont synchronisées dans le cloud.</div></div></div>';
-  }
-  
   div.innerHTML = h;
 }
 
-function generateMovieId() {
-  return 'MOV_' + Date.now();
-}
+function generateMovieId() { return 'MOV_' + Date.now(); }
 
 async function addMovie(e) {
   if (e) e.preventDefault();
   var aB = document.getElementById('addAlert');
-  
   var title = document.getElementById('addTitle').value.trim();
   var type = document.getElementById('addType').value;
   var year = parseInt(document.getElementById('addYear').value);
@@ -1336,27 +1127,10 @@ async function addMovie(e) {
     return;
   }
   
-  var newMovie = {
-    id: generateMovieId(),
-    title: title,
-    type: type,
-    year: year,
-    duration: duration,
-    genre: genre,
-    desc: desc,
-    poster: poster,
-    video: video,
-    download: download,
-    isNew: isNew,
-    isFeatured: isFeatured,
-    views: 0,
-    addedAt: new Date().toISOString().split('T')[0]
-  };
-  
+  var newMovie = { id: generateMovieId(), title: title, type: type, year: year, duration: duration, genre: genre, desc: desc, poster: poster, video: video, download: download, isNew: isNew, isFeatured: isFeatured, views: 0, addedAt: new Date().toISOString().split('T')[0] };
   await DB.saveMovie(newMovie);
   
   if (aB) aB.innerHTML = '<div class="alert alert-ok"><i class="fas fa-check-circle"></i> Film/Série ajouté avec succès !</div>';
-  
   document.getElementById('addTitle').value = '';
   document.getElementById('addType').value = 'movie';
   document.getElementById('addYear').value = '';
@@ -1368,26 +1142,17 @@ async function addMovie(e) {
   document.getElementById('addDownload').value = '';
   document.getElementById('addNew').checked = true;
   document.getElementById('addFeatured').checked = false;
-  
   toast('Film ajouté !', title + ' est maintenant disponible.');
-  
-  setTimeout(function() {
-    adminTab('movies', document.querySelector('.admin-tab'));
-  }, 1500);
+  setTimeout(function() { adminTab('movies', document.querySelector('.admin-tab')); }, 1500);
 }
 
 async function editMovie(id) {
   var movies = await DB.getMovies();
   var m = null;
-  for (var i = 0; i < movies.length; i++) {
-    if (movies[i].id === id) { m = movies[i]; break; }
-  }
+  for (var i = 0; i < movies.length; i++) { if (movies[i].id === id) { m = movies[i]; break; } }
   if (!m) return;
-  
   var h = '<button class="modal-close" onclick="closeModal()"><i class="fas fa-times"></i></button>';
-  h += '<h2>MODIFIER</h2>';
-  h += '<p class="sub">' + m.title + '</p>';
-  h += '<div id="editAlert"></div>';
+  h += '<h2>MODIFIER</h2><p class="sub">' + m.title + '</p><div id="editAlert"></div>';
   h += '<form onsubmit="saveMovie(event,\'' + m.id + '\')">';
   h += '<div class="form-row"><div class="form-group"><label>Titre *</label><input type="text" id="editTitle" value="' + m.title + '" required></div>';
   h += '<div class="form-group"><label>Type *</label><select id="editType" required><option value="movie"' + (m.type === 'movie' ? ' selected' : '') + '>Film</option><option value="series"' + (m.type === 'series' ? ' selected' : '') + '>Série</option></select></div></div>';
@@ -1400,9 +1165,7 @@ async function editMovie(id) {
   h += '<div class="form-group"><label>Lien téléchargement</label><input type="url" id="editDownload" value="' + (m.download || '') + '"></div>';
   h += '<div class="form-row"><div class="form-group"><label><input type="checkbox" id="editNew"' + (m.isNew ? ' checked' : '') + ' style="margin-right:6px"> Nouveau</label></div>';
   h += '<div class="form-group"><label><input type="checkbox" id="editFeatured"' + (m.isFeatured ? ' checked' : '') + ' style="margin-right:6px"> À la une</label></div></div>';
-  h += '<button type="submit" class="btn btn-primary btn-lg"><i class="fas fa-save"></i> ENREGISTRER</button>';
-  h += '</form>';
-  
+  h += '<button type="submit" class="btn btn-primary btn-lg"><i class="fas fa-save"></i> ENREGISTRER</button></form>';
   var ov = document.getElementById('modalOverlay');
   var ct = document.getElementById('modalContent');
   ct.innerHTML = h;
@@ -1412,7 +1175,6 @@ async function editMovie(id) {
 async function saveMovie(e, id) {
   if (e) e.preventDefault();
   var aB = document.getElementById('editAlert');
-  
   var movies = await DB.getMovies();
   for (var i = 0; i < movies.length; i++) {
     if (movies[i].id === id) {
@@ -1433,10 +1195,7 @@ async function saveMovie(e, id) {
   }
   if (aB) aB.innerHTML = '<div class="alert alert-ok"><i class="fas fa-check-circle"></i> Modifications enregistrées.</div>';
   toast('Film modifié', 'Les changements ont été sauvegardés.');
-  setTimeout(function() {
-    closeModal();
-    renderMoviesTable();
-  }, 1500);
+  setTimeout(function() { closeModal(); renderMoviesTable(); }, 1500);
 }
 
 async function deleteMovie(id) {
@@ -1450,7 +1209,6 @@ async function deleteMovie(id) {
 async function toggleUserStatus(id, newStatus) {
   var label = newStatus === 'active' ? 'approuver' : 'désactiver';
   if (!confirm('Voulez-vous ' + label + ' ce membre ?')) return;
-  
   await DB.updateUserStatus(id, newStatus);
   toast('Statut modifié', 'Le membre a été ' + label + '.');
   renderUsersTable();
@@ -1468,59 +1226,43 @@ async function deleteUser(id) {
 function saveAppwriteConfig(e) {
   if (e) e.preventDefault();
   var aB = document.getElementById('configAlert');
-  
   APPWRITE_CONFIG.endpoint = document.getElementById('cfgEndpoint').value.trim();
   APPWRITE_CONFIG.projectId = document.getElementById('cfgProjectId').value.trim();
   APPWRITE_CONFIG.databaseId = document.getElementById('cfgDatabaseId').value.trim();
   APPWRITE_CONFIG.usersCollection = document.getElementById('cfgUsersCollection').value.trim();
   APPWRITE_CONFIG.moviesCollection = document.getElementById('cfgMoviesCollection').value.trim();
   APPWRITE_CONFIG.platform = document.getElementById('cfgPlatform').value.trim() || 'Série & Films for Life';
-  
   localStorage.setItem('sfl_appwrite_config', JSON.stringify(APPWRITE_CONFIG));
-  
   initAppwrite();
   renderConfigStatus();
-  
   if (aB) aB.innerHTML = '<div class="alert alert-ok"><i class="fas fa-check-circle"></i> Configuration Appwrite sauvegardée !</div>';
-  toast('Appwrite configuré', 'Redémarrez pour appliquer les changements.');
+  toast('Appwrite configuré', 'Redémarrez pour appliquer.');
 }
 
 async function testAppwriteConnection() {
   var aB = document.getElementById('configAlert');
   if (!aB) return;
-  
-  aB.innerHTML = '<div class="alert alert-info"><i class="fas fa-spinner fa-spin"></i> Test de connexion en cours...</div>';
-  
+  aB.innerHTML = '<div class="alert alert-info"><i class="fas fa-spinner fa-spin"></i> Test en cours...</div>';
   if (!APPWRITE_CONFIG.endpoint || !APPWRITE_CONFIG.projectId) {
     aB.innerHTML = '<div class="alert alert-err"><i class="fas fa-exclamation-circle"></i> Endpoint et Project ID requis.</div>';
     return;
   }
-  
   try {
     initAppwrite();
     if (isAppwriteReady) {
       var account = await appwriteAccount.get();
-      aB.innerHTML = '<div class="alert alert-ok"><i class="fas fa-check-circle"></i> ✓ Connexion réussie ! Utilisateur: ' + (account.email || 'non connecté') + '</div>';
+      aB.innerHTML = '<div class="alert alert-ok"><i class="fas fa-check-circle"></i> ✓ Connexion réussie !</div>';
       toast('Connexion réussie', 'Appwrite est bien configuré.');
     } else {
-      aB.innerHTML = '<div class="alert alert-err"><i class="fas fa-exclamation-circle"></i> Échec de la connexion. Vérifiez vos clés.</div>';
+      aB.innerHTML = '<div class="alert alert-err"><i class="fas fa-exclamation-circle"></i> Échec de connexion.</div>';
     }
-  } catch(e) {
-    aB.innerHTML = '<div class="alert alert-err"><i class="fas fa-exclamation-circle"></i> Erreur: ' + e.message + '</div>';
-  }
+  } catch(e) { aB.innerHTML = '<div class="alert alert-err"><i class="fas fa-exclamation-circle"></i> Erreur: ' + e.message + '</div>'; }
 }
 
 function clearAppwriteConfig() {
-  if (!confirm('Effacer la configuration Appwrite ? Le système reviendra en mode local.')) return;
+  if (!confirm('Effacer la configuration Appwrite ?')) return;
   localStorage.removeItem('sfl_appwrite_config');
-  APPWRITE_CONFIG = {
-    endpoint: '',
-    projectId: '',
-    databaseId: '',
-    usersCollection: '',
-    moviesCollection: '',
-    platform: 'Série & Films for Life'
-  };
+  APPWRITE_CONFIG = { endpoint: '', projectId: '', databaseId: '', usersCollection: '', moviesCollection: '', platform: 'Série & Films for Life' };
   initAppwrite();
   renderConfigStatus();
   toast('Configuration effacée', 'Mode local activé.');
@@ -1533,7 +1275,6 @@ function openConfigModal() {
   document.getElementById('cfgUsersCollection').value = APPWRITE_CONFIG.usersCollection || '';
   document.getElementById('cfgMoviesCollection').value = APPWRITE_CONFIG.moviesCollection || '';
   document.getElementById('cfgPlatform').value = APPWRITE_CONFIG.platform || '';
-  
   adminTab('config', document.querySelectorAll('.admin-tab')[3] || document.querySelector('.admin-tab'));
   go('admin');
 }
@@ -1543,95 +1284,39 @@ async function doLogin(e) {
   var email = document.getElementById('loginEmail').value.trim().toLowerCase();
   var password = document.getElementById('loginPassword').value;
   var aB = document.getElementById('loginAlert');
+  if (!email || !password) { if (aB) aB.innerHTML = '<div class="alert alert-err"><i class="fas fa-exclamation-circle"></i> Email et mot de passe requis.</div>'; return; }
   
-  if (!email || !password) {
-    if (aB) aB.innerHTML = '<div class="alert alert-err"><i class="fas fa-exclamation-circle"></i> Email et mot de passe requis.</div>';
-    return;
-  }
-  
-  // Essayer Appwrite d'abord
   if (isAppwriteReady) {
     var result = await DB.login(email, password);
     if (result.success) {
-      // Chercher l'utilisateur dans la DB
       var users = await DB.getUsers();
       var u = null;
-      for (var i = 0; i < users.length; i++) {
-        if (users[i].email && users[i].email.toLowerCase() === email) {
-          u = users[i];
-          break;
-        }
-      }
-      
+      for (var i = 0; i < users.length; i++) { if (users[i].email && users[i].email.toLowerCase() === email) { u = users[i]; break; } }
       if (!u) {
-        // Créer automatiquement si n'existe pas (première connexion Appwrite)
-        u = {
-          id: result.userId,
-          email: email,
-          password: password,
-          registeredAt: new Date().toISOString().split('T')[0],
-          status: 'active',
-          lastLogin: new Date().toISOString(),
-          isAdmin: false
-        };
+        u = { id: result.userId, email: email, password: password, registeredAt: new Date().toISOString().split('T')[0], status: 'active', lastLogin: new Date().toISOString(), isAdmin: false };
         await DB.saveUser(u);
-      } else {
-        u.lastLogin = new Date().toISOString();
-        await DB.saveUser(u);
-      }
-      
-      if (u.status === 'disabled') {
-        if (aB) aB.innerHTML = '<div class="alert alert-warn"><i class="fas fa-exclamation-triangle"></i> Votre compte est désactivé. Contactez l\'administration.</div>';
-        return;
-      }
-      
+      } else { u.lastLogin = new Date().toISOString(); await DB.saveUser(u); }
+      if (u.status === 'disabled') { if (aB) aB.innerHTML = '<div class="alert alert-warn"><i class="fas fa-exclamation-triangle"></i> Compte désactivé.</div>'; return; }
       setSession({userId: u.id});
       closeModal();
-      toast('Bienvenue !', 'Connexion réussie sur cet appareil.');
-      setTimeout(function() {
-        if (u.isAdmin) go('admin');
-        else go('dashboard');
-      }, 500);
+      toast('Bienvenue !', 'Connexion réussie');
+      setTimeout(function() { if (u.isAdmin) go('admin'); else go('dashboard'); }, 500);
       return;
-    } else {
-      if (aB) aB.innerHTML = '<div class="alert alert-err"><i class="fas fa-exclamation-circle"></i> ' + result.error + '</div>';
-      return;
-    }
+    } else { if (aB) aB.innerHTML = '<div class="alert alert-err"><i class="fas fa-exclamation-circle"></i> ' + result.error + '</div>'; return; }
   }
   
-  // Fallback localStorage
   var users = getDB('users') || [];
   var u = null;
-  for (var i = 0; i < users.length; i++) {
-    if (users[i].email && users[i].email.toLowerCase() === email && users[i].password === password) {
-      u = users[i];
-      break;
-    }
-  }
-  
-  if (!u) {
-    if (aB) aB.innerHTML = '<div class="alert alert-err"><i class="fas fa-exclamation-circle"></i> Email ou mot de passe incorrect.</div>';
-    return;
-  }
-  
-  if (u.status === 'disabled') {
-    if (aB) aB.innerHTML = '<div class="alert alert-warn"><i class="fas fa-exclamation-triangle"></i> Votre compte est désactivé.</div>';
-    return;
-  }
-  
+  for (var i = 0; i < users.length; i++) { if (users[i].email && users[i].email.toLowerCase() === email && users[i].password === password) { u = users[i]; break; } }
+  if (!u) { if (aB) aB.innerHTML = '<div class="alert alert-err"><i class="fas fa-exclamation-circle"></i> Email ou mot de passe incorrect.</div>'; return; }
+  if (u.status === 'disabled') { if (aB) aB.innerHTML = '<div class="alert alert-warn"><i class="fas fa-exclamation-triangle"></i> Compte désactivé.</div>'; return; }
   u.lastLogin = new Date().toISOString();
-  for (var i = 0; i < users.length; i++) {
-    if (users[i].id === u.id) { users[i] = u; break; }
-  }
+  for (var i = 0; i < users.length; i++) { if (users[i].id === u.id) { users[i] = u; break; } }
   setDB('users', users);
   setSession({userId: u.id});
-  
   closeModal();
   toast('Bienvenue !', 'Connexion réussie');
-  setTimeout(function() {
-    if (u.isAdmin) go('admin');
-    else go('dashboard');
-  }, 500);
+  setTimeout(function() { if (u.isAdmin) go('admin'); else go('dashboard'); }, 500);
 }
 
 async function doRegister(e) {
@@ -1639,48 +1324,18 @@ async function doRegister(e) {
   var email = document.getElementById('regEmail').value.trim().toLowerCase();
   var password = document.getElementById('regPassword').value;
   var aB = document.getElementById('regAlert');
-  
-  if (!email || !password) {
-    if (aB) aB.innerHTML = '<div class="alert alert-err"><i class="fas fa-exclamation-circle"></i> Email et mot de passe requis.</div>';
-    return;
-  }
-  
-  if (!email.endsWith('@gmail.com')) {
-    if (aB) aB.innerHTML = '<div class="alert alert-err"><i class="fas fa-exclamation-circle"></i> Veuillez utiliser une adresse Gmail.</div>';
-    return;
-  }
-  
-  // Vérifier si email existe déjà
+  if (!email || !password) { if (aB) aB.innerHTML = '<div class="alert alert-err"><i class="fas fa-exclamation-circle"></i> Email et mot de passe requis.</div>'; return; }
+  if (!email.endsWith('@gmail.com')) { if (aB) aB.innerHTML = '<div class="alert alert-err"><i class="fas fa-exclamation-circle"></i> Veuillez utiliser une adresse Gmail.</div>'; return; }
   var users = await DB.getUsers();
-  for (var i = 0; i < users.length; i++) {
-    if (users[i].email && users[i].email.toLowerCase() === email) {
-      if (aB) aB.innerHTML = '<div class="alert alert-err"><i class="fas fa-exclamation-circle"></i> Cet email est déjà utilisé.</div>';
-      return;
-    }
-  }
-  
-  var newMember = {
-    id: "USR_" + Date.now(),
-    email: email,
-    password: password,
-    registeredAt: new Date().toISOString().split('T')[0],
-    status: 'active',
-    lastLogin: null,
-    isAdmin: false
-  };
-  
-  // Essayer Appwrite Auth pour multi-appareils
+  for (var i = 0; i < users.length; i++) { if (users[i].email && users[i].email.toLowerCase() === email) { if (aB) aB.innerHTML = '<div class="alert alert-err"><i class="fas fa-exclamation-circle"></i> Email déjà utilisé.</div>'; return; } }
+  var newMember = { id: "USR_" + Date.now(), email: email, password: password, registeredAt: new Date().toISOString().split('T')[0], status: 'active', lastLogin: null, isAdmin: false };
   if (isAppwriteReady) {
     var result = await DB.register(email, password);
-    if (result.success) {
-      newMember.id = result.userId;
-    }
+    if (result.success) newMember.id = result.userId;
   }
-  
   await DB.saveUser(newMember);
   setSession({userId: newMember.id});
-  
-  if (aB) aB.innerHTML = '<div class="alert alert-ok"><i class="fas fa-check-circle"></i> Inscription réussie ! Bienvenue.</div>';
+  if (aB) aB.innerHTML = '<div class="alert alert-ok"><i class="fas fa-check-circle"></i> Inscription réussie !</div>';
   setTimeout(function() { closeModal(); toast('Bienvenue !', 'Inscription réussie.'); go('dashboard'); }, 1500);
 }
 
@@ -1695,44 +1350,32 @@ function openModal(tp) {
   var ov = document.getElementById('modalOverlay');
   var ct = document.getElementById('modalContent');
   var h = '';
-  
   if (tp === 'register') {
     h = '<button class="modal-close" onclick="closeModal()"><i class="fas fa-times"></i></button>';
-    h += '<h2>INSCRIPTION</h2>';
-    h += '<p class="sub">Créez votre compte gratuitement. Connectez-vous sur tous vos appareils.</p>';
-    if (isAppwriteReady) {
-      h += '<div class="alert alert-info" style="margin-bottom:16px"><i class="fas fa-cloud"></i><div>Synchronisation cloud activée - Vos données sont sauvegardées sur tous vos appareils</div></div>';
-    }
+    h += '<h2>INSCRIPTION</h2><p class="sub">Créez votre compte gratuitement.</p>';
+    if (isAppwriteReady) h += '<div class="alert alert-info" style="margin-bottom:16px"><i class="fas fa-cloud"></i><div>Synchronisation cloud activée</div></div>';
     h += '<div id="regAlert"></div>';
     h += '<form onsubmit="doRegister(event)">';
     h += '<div class="form-group"><label>Email Gmail *</label><input type="email" id="regEmail" required placeholder="votre@gmail.com"></div>';
     h += '<div class="form-group"><label>Mot de passe *</label><input type="password" id="regPassword" required minlength="6" placeholder="Min. 6 caractères"></div>';
-    h += '<button type="submit" class="btn btn-primary btn-lg">S\'INSCRIRE</button>';
-    h += '</form>';
+    h += '<button type="submit" class="btn btn-primary btn-lg">S\'INSCRIRE</button></form>';
     h += '<div class="modal-switch">Déjà inscrit ? <a onclick="openModal(\'login\')">Se connecter</a></div>';
   } else if (tp === 'login') {
     h = '<button class="modal-close" onclick="closeModal()"><i class="fas fa-times"></i></button>';
-    h += '<h2>CONNEXION</h2>';
-    h += '<p class="sub">Accédez à votre espace sur n\'importe quel appareil.</p>';
-    if (isAppwriteReady) {
-      h += '<div class="alert alert-info" style="margin-bottom:16px"><i class="fas fa-cloud"></i><div>Connexion cloud - Vos données sont synchronisées</div></div>';
-    }
+    h += '<h2>CONNEXION</h2><p class="sub">Accédez à votre espace.</p>';
+    if (isAppwriteReady) h += '<div class="alert alert-info" style="margin-bottom:16px"><i class="fas fa-cloud"></i><div>Connexion cloud activée</div></div>';
     h += '<div id="loginAlert"></div>';
     h += '<form onsubmit="doLogin(event)">';
     h += '<div class="form-group"><label>Email *</label><input type="email" id="loginEmail" required placeholder="votre@gmail.com"></div>';
     h += '<div class="form-group"><label>Mot de passe *</label><input type="password" id="loginPassword" required></div>';
-    h += '<button type="submit" class="btn btn-primary btn-lg">SE CONNECTER</button>';
-    h += '</form>';
+    h += '<button type="submit" class="btn btn-primary btn-lg">SE CONNECTER</button></form>';
     h += '<div class="modal-switch">Pas de compte ? <a onclick="openModal(\'register\')">S\'inscrire</a></div>';
   }
-  
   ct.innerHTML = h;
   ov.classList.add('open');
 }
 
-function closeModal() {
-  document.getElementById('modalOverlay').classList.remove('open');
-}
+function closeModal() { document.getElementById('modalOverlay').classList.remove('open'); }
 
 function toast(t, m) {
   document.getElementById('toastTitle').textContent = t;
@@ -1759,6 +1402,8 @@ window.toggleUserStatus = toggleUserStatus;
 window.deleteUser = deleteUser;
 window.openPlayer = openPlayer;
 window.playVideo = playVideo;
+window.closePlayer = closePlayer;
+window.toggleFullscreen = toggleFullscreen;
 window.openConfigModal = openConfigModal;
 window.saveAppwriteConfig = saveAppwriteConfig;
 window.testAppwriteConnection = testAppwriteConnection;
@@ -1772,20 +1417,18 @@ document.addEventListener('DOMContentLoaded', function() {
     if (session) {
       DB.getUsers().then(function(users) {
         var u = null;
-        for (var i = 0; i < users.length; i++) {
-          if (users[i].id === session.userId) { u = users[i]; break; }
-        }
-        if (u) {
-          if (u.isAdmin) go('admin');
-          else go('dashboard');
-        }
+        for (var i = 0; i < users.length; i++) { if (users[i].id === session.userId) { u = users[i]; break; } }
+        if (u) { if (u.isAdmin) go('admin'); else go('dashboard'); }
       });
     }
   });
 });
 
 document.addEventListener('keydown', function(e) {
-  if (e.key === 'Escape') closeModal();
+  if (e.key === 'Escape') {
+    if (document.getElementById('page-player').classList.contains('active')) closePlayer();
+    else closeModal();
+  }
 });
 
 })();
